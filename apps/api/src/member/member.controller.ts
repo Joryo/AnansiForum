@@ -1,19 +1,44 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
-import { MemberDto } from './entities/member';
-import { Member } from '@prisma/client';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  NotFoundException,
+} from '@nestjs/common';
+import { ApiResponse } from '@nestjs/swagger';
+import { CreateMemberDto, MemberDto } from './dto/member';
 import { MemberService } from './member.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, Member } from '@prisma/client';
 
 @Controller('members')
 export class MemberController {
   constructor(private memberService: MemberService) {}
-  @Get()
-  get(): string {
-    return 'Member 1';
+  @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'The found member',
+    type: MemberDto,
+  })
+  async findOne(@Param('id') id: string): Promise<Member> {
+    const member: Member = await this.memberService.member({
+      id: Number(id),
+    });
+
+    if (!member) {
+      throw new NotFoundException("This member doesn't exist");
+    }
+
+    return member;
   }
 
   @Post()
-  async create(@Body() member: MemberDto): Promise<Member> {
+  @ApiResponse({
+    status: 201,
+    description: 'Created Member',
+    type: MemberDto,
+  })
+  async create(@Body() member: CreateMemberDto): Promise<Member> {
     const memberCreateInput: Prisma.MemberCreateInput = {
       name: member.name,
       email: member.email,
