@@ -12,9 +12,11 @@ import { PostService } from './post/post.service';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { APP_PIPE } from '@nestjs/core';
 import { PrismaService } from './prisma.service';
+import { AuthModule } from './auth/auth.module';
+import { MemberModule } from './member/member.module';
 
 @Module({
-  imports: [],
+  imports: [AuthModule, MemberModule],
   controllers: [
     AppController,
     PostController,

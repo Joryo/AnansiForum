@@ -5,28 +5,45 @@ import {
   Body,
   Param,
   NotFoundException,
+  Req,
+  UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import * as jwt from 'jsonwebtoken';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateMemberDto, MemberDto } from './dto/member';
 import { MemberService } from './member.service';
-import { Prisma, Member } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { MemberRoles } from 'src/enums/memberRoles';
+import { jwtConstants } from 'src/auth/constants';
 
+@ApiTags('Members')
 @Controller('members')
 export class MemberController {
-  constructor(private memberService: MemberService) {}
+  constructor(private readonly memberService: MemberService) {}
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiResponse({
     status: 200,
     description: 'The found member',
     type: MemberDto,
   })
-  async findOne(@Param('id') id: string): Promise<Member> {
-    const member: Member = await this.memberService.member({
+  async findOne(@Param('id') id: string, @Req() { user }) {
+    const member = await this.memberService.member({
       id: Number(id),
     });
 
     if (!member) {
       throw new NotFoundException("This member doesn't exist");
+    }
+
+    // Only connected admin can access other members
+    if (user.role !== MemberRoles.ADMIN && user.id !== member.id) {
+      throw new ForbiddenException(
+        "You don't have the permission to access this member",
+      );
     }
 
     return member;
@@ -38,14 +55,23 @@ export class MemberController {
     description: 'Created Member',
     type: MemberDto,
   })
-  async create(@Body() member: CreateMemberDto): Promise<Member> {
-    const memberCreateInput: Prisma.MemberCreateInput = {
-      name: member.name,
-      email: member.email,
-      password: member.password,
-      role: member.role,
-    };
+  async create(
+    @Body() member: CreateMemberDto,
+    @Req() { headers: { authorization } },
+  ) {
+    // Only connected admin can create admins
+    if (member.role === MemberRoles.ADMIN) {
+      const token = authorization?.split(' ')[1];
+      const user =
+        token && (jwt.verify(token, jwtConstants.secret) as jwt.JwtPayload);
 
-    return this.memberService.createMember(memberCreateInput);
+      if (user?.role !== MemberRoles.ADMIN) {
+        throw new ForbiddenException(
+          "You don't have the permission to create an admin",
+        );
+      }
+    }
+
+    return this.memberService.createMember(member);
   }
 }
