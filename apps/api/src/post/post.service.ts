@@ -13,7 +13,10 @@ export class PostService {
   ): Promise<Post | null> {
     return this.prisma.post.findUnique({
       where,
-      include,
+      include: {
+        ...include,
+        tags: true,
+      },
     });
   }
 
@@ -32,6 +35,9 @@ export class PostService {
       cursor,
       where,
       orderBy,
+      include: {
+        tags: true,
+      },
     });
   }
 
@@ -40,10 +46,16 @@ export class PostService {
       ...data,
       title: data.title || '',
       author: { connect: { id: authorId } },
+      tags: {
+        connect: data.tags?.map((tag) => ({ id: tag.id })),
+      },
     };
 
     return this.prisma.post.create({
       data: post,
+      include: {
+        tags: true,
+      },
     });
   }
 

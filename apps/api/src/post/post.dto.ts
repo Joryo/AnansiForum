@@ -4,6 +4,10 @@ import { createZodDto } from 'nestjs-zod/dto';
 const CreatePostSchema = z.object({
   title: z.string().describe('Title of the post'),
   content: z.string().describe('Content of the post'),
+  tags: z
+    .array(z.object({ id: z.number().int() }))
+    .optional()
+    .default([]),
 });
 
 const GetPostsDtoSchema = z.object({
