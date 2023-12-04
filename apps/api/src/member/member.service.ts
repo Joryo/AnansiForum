@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { Prisma, Member } from '@prisma/client';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { CreateMemberDto } from './dto/member';
+import { CreateMemberDto } from './member.dto';
 import { MemberRoles } from 'src/enums/memberRoles';
 
 @Injectable()
@@ -72,9 +72,9 @@ export class MemberService {
     });
   }
 
-  async deleteMember(where: Prisma.MemberWhereUniqueInput): Promise<Member> {
+  async deleteMember(id: string): Promise<Member> {
     return this.prisma.member.delete({
-      where,
+      where: { id: Number(id) },
     });
   }
 }

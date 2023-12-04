@@ -1,6 +1,6 @@
 import * as z from 'nestjs-zod/z';
 import { createZodDto } from 'nestjs-zod/dto';
-import { MemberRoles } from '../../enums/memberRoles';
+import { MemberRoles } from '../enums/memberRoles';
 
 const BaseMemberSchema = z.object({
   email: z.string().email().describe('Email of the member'),

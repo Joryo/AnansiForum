@@ -28,7 +28,7 @@ model Post {
   updatedAt  DateTime   @updatedAt
   title     String
   content   String?
-  author    Member    @relation(fields: [authorId], references: [id])
+  author    Member    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  Int
   tags      Tag[]
   comments  Comment[]
@@ -48,8 +48,8 @@ model Comment {
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   content   String?
-  author    Member    @relation(fields: [authorId], references: [id])
+  author    Member    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  Int
-  post      Post    @relation(fields: [postId], references: [id])
+  post      Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
 }
