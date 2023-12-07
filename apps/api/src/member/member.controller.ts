@@ -11,6 +11,7 @@ import {
   ForbiddenException,
   Delete,
   HttpCode,
+  Res,
 } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -20,11 +21,15 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { MemberRoles } from 'src/enums/memberRoles';
 import { jwtConstants } from 'src/auth/constants';
 import { MemberCreatePresenter } from './member.presenter';
+import { AuthService } from 'src/auth/auth.service';
 
 @ApiTags('Member')
 @Controller('members')
 export class MemberController {
-  constructor(private readonly memberService: MemberService) {}
+  constructor(
+    private readonly memberService: MemberService,
+    private readonly authService: AuthService,
+  ) {}
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -62,6 +67,7 @@ export class MemberController {
   async create(
     @Body() member: CreateMemberDto,
     @Req() { headers: { authorization } },
+    @Res() res,
   ) {
     // Only connected admin can create admins
     if (member.role === MemberRoles.ADMIN) {
@@ -76,7 +82,11 @@ export class MemberController {
       }
     }
 
-    return this.memberService.createMember(member);
+    const savedMember = await this.memberService.createMember(member);
+    const login = await this.authService.login(savedMember);
+
+    res.header('X-Access-token', login.access_token);
+    res.json(savedMember);
   }
 
   @Put(':id')
