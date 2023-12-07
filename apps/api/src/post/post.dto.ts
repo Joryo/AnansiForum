@@ -10,6 +10,13 @@ const CreatePostSchema = z.object({
     .default([]),
 });
 
+const UpdatePostSchema = z
+  .object({
+    content: z.string().optional().describe('Content of the post'),
+    tags: z.array(z.object({ id: z.number().int() })).optional(),
+  })
+  .strict();
+
 const GetPostsDtoSchema = z.object({
   limit: z
     .string()
@@ -32,4 +39,5 @@ const GetPostsDtoSchema = z.object({
 });
 
 export class CreatePostDto extends createZodDto(CreatePostSchema) {}
+export class UpdatePostDto extends createZodDto(UpdatePostSchema) {}
 export class GetPostsDto extends createZodDto(GetPostsDtoSchema) {}

@@ -8,6 +8,12 @@ const CreateCommentSchema = z.object({
   content: z.string().describe('Content of the comment'),
 });
 
+const UpdateCommentSchema = z
+  .object({
+    content: z.string().optional().describe('Content of the comment'),
+  })
+  .strict();
+
 const GetCommentsDtoSchema = z.object({
   limit: z
     .string()
@@ -30,4 +36,5 @@ const GetCommentsDtoSchema = z.object({
 });
 
 export class CreateCommentDto extends createZodDto(CreateCommentSchema) {}
+export class UpdateCommentDto extends createZodDto(UpdateCommentSchema) {}
 export class GetCommentsDto extends createZodDto(GetCommentsDtoSchema) {}

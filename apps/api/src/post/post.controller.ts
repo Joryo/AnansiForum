@@ -3,6 +3,7 @@ import {
   Post,
   Body,
   Req,
+  Put,
   UseGuards,
   Delete,
   Param,
@@ -15,7 +16,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
-import { CreatePostDto, GetPostsDto } from './post.dto';
+import { CreatePostDto, GetPostsDto, UpdatePostDto } from './post.dto';
 import { MemberRoles } from 'src/enums/memberRoles';
 import { PostGetPresenter, PostCreatePresenter } from './post.presenter';
 
@@ -81,6 +82,33 @@ export class PostController {
     return new PostCreatePresenter(createdPost);
   }
 
+  @Put(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Update post',
+    type: PostCreatePresenter,
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() post: UpdatePostDto,
+    @Req() { user },
+  ) {
+    const currentPost = await this.postService.post({
+      id: Number(id),
+    });
+    if (!currentPost) {
+      throw new NotFoundException("This post doesn't exist");
+    }
+    if (user.role !== MemberRoles.ADMIN && user.id !== currentPost.authorId) {
+      throw new ForbiddenException(
+        "You don't have the permission to update this post",
+      );
+    }
+    const updatedPost = await this.postService.updatePost(id, post);
+
+    return new PostCreatePresenter(updatedPost);
+  }
+
   @Delete(':id')
   @ApiResponse({
     status: 204,
@@ -95,7 +123,7 @@ export class PostController {
     }
     if (user.role !== MemberRoles.ADMIN && user.id !== post.authorId) {
       throw new ForbiddenException(
-        "You don't have the permission to access this post",
+        "You don't have the permission to delete this post",
       );
     }
 

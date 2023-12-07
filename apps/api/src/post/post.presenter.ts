@@ -42,12 +42,15 @@ export class PostCreatePresenter {
   createdAt: Date;
   @ApiProperty()
   tags: TagGetPresenter[];
+  @ApiProperty()
+  updatedAt: Date;
 
   constructor(post) {
     this.id = post.id;
     this.title = post.title;
     this.content = post.content;
     this.createdAt = post.createdAt;
+    this.updatedAt = post.updatedAt;
     this.tags = post.tags
       ? post.tags.map((tag) => new TagGetPresenter(tag))
       : [];

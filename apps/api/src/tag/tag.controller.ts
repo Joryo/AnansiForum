@@ -3,6 +3,7 @@ import {
   Post,
   Body,
   Req,
+  Put,
   UseGuards,
   Delete,
   Param,
@@ -15,7 +16,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TagService } from './tag.service';
-import { CreateTagDto, GetTagsDto } from './tag.dto';
+import { CreateTagDto, GetTagsDto, UpdateTagDto } from './tag.dto';
 import { MemberRoles } from 'src/enums/memberRoles';
 import { TagGetPresenter, TagCreatePresenter } from './tag.presenter';
 
@@ -63,6 +64,35 @@ export class TagController {
     const createdTag = await this.tagService.createTag(tag);
 
     return new TagCreatePresenter(createdTag);
+  }
+
+  @Put(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Update tag',
+    type: TagCreatePresenter,
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() post: UpdateTagDto,
+    @Req() { user },
+  ) {
+    if (user.role !== MemberRoles.ADMIN) {
+      throw new ForbiddenException(
+        "You don't have the permission to update tags",
+      );
+    }
+
+    const currentPost = await this.tagService.tag({
+      id: Number(id),
+    });
+    if (!currentPost) {
+      throw new NotFoundException("This tag doesn't exist");
+    }
+
+    const updatedPost = await this.tagService.updateTag(id, post);
+
+    return new TagCreatePresenter(updatedPost);
   }
 
   @Delete(':id')

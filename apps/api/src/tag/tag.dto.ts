@@ -14,6 +14,8 @@ const CreateTagSchema = z.object({
     .describe('Color of the tag'),
 });
 
+const UpdateTagSchema = CreateTagSchema.extend({});
+
 const GetTagsDtoSchema = z.object({
   limit: z
     .string()
@@ -32,4 +34,5 @@ const GetTagsDtoSchema = z.object({
 });
 
 export class CreateTagDto extends createZodDto(CreateTagSchema) {}
+export class UpdateTagDto extends createZodDto(UpdateTagSchema) {}
 export class GetTagsDto extends createZodDto(GetTagsDtoSchema) {}

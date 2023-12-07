@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { Prisma, Member } from '@prisma/client';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { CreateMemberDto } from './member.dto';
+import { CreateMemberDto, UpdateMemberDto } from './member.dto';
 import { MemberRoles } from 'src/enums/memberRoles';
 
 @Injectable()
@@ -48,27 +48,28 @@ export class MemberService {
       throw new BadRequestException();
     }
 
-    const encryptedPassword = await bcrypt.hash(password, 10);
-
     const member: Prisma.MemberCreateInput = {
       ...data,
       email,
       name: data.name || '',
       role: data.role || MemberRoles.MEMBER,
-      password: encryptedPassword,
+      password: await this.encryptPassword(password),
     };
 
     return this.prisma.member.create({ data: member });
   }
 
-  async updateMember(params: {
-    where: Prisma.MemberWhereUniqueInput;
-    data: Prisma.MemberUpdateInput;
-  }): Promise<Member> {
-    const { where, data } = params;
+  async updateMember(id: string, data: UpdateMemberDto): Promise<Member> {
+    const member: Prisma.MemberUpdateInput = {
+      ...data,
+      password: data.password
+        ? await this.encryptPassword(data.password)
+        : undefined,
+    };
+
     return this.prisma.member.update({
-      data,
-      where,
+      data: member,
+      where: { id: Number(id) },
     });
   }
 
@@ -76,5 +77,9 @@ export class MemberService {
     return this.prisma.member.delete({
       where: { id: Number(id) },
     });
+  }
+
+  async encryptPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 10);
   }
 }

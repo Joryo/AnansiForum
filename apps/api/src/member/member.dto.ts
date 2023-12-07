@@ -18,9 +18,22 @@ const CreateMemberSchema = BaseMemberSchema.extend({
     .describe('Role of the member'),
 });
 
+const UpdateMemberSchema = z.object({
+  name: z.string().optional().describe('Name of the member'),
+  email: z.string().email().optional().describe('Email of the member'),
+  password: z
+    .string()
+    .min(8)
+    .max(100)
+    .optional()
+    .describe('Password of the member'),
+  role: z.nativeEnum(MemberRoles).optional().describe('Role of the member'),
+});
+
 const MemberSchema = CreateMemberSchema.extend({
   id: z.number().int().describe('Id of the member'),
 });
 
 export class CreateMemberDto extends createZodDto(CreateMemberSchema) {}
+export class UpdateMemberDto extends createZodDto(UpdateMemberSchema) {}
 export class MemberDto extends createZodDto(MemberSchema) {}

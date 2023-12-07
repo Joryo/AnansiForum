@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Body,
+  Put,
   Req,
   UseGuards,
   Delete,
@@ -15,7 +16,11 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommentService } from './comment.service';
-import { CreateCommentDto, GetCommentsDto } from './comment.dto';
+import {
+  CreateCommentDto,
+  GetCommentsDto,
+  UpdateCommentDto,
+} from './comment.dto';
 import { MemberRoles } from 'src/enums/memberRoles';
 import {
   CommentGetPresenter,
@@ -56,7 +61,7 @@ export class CommentController {
 
   @Post()
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: 'Created comment',
     type: CommentCreatePresenter,
   })
@@ -74,6 +79,36 @@ export class CommentController {
     );
 
     return new CommentCreatePresenter(createdComment);
+  }
+
+  @Put(':id')
+  @ApiResponse({
+    status: 201,
+    description: 'Update comment',
+    type: CommentCreatePresenter,
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() comment: UpdateCommentDto,
+    @Req() { user },
+  ) {
+    const currentComment = await this.commentService.comment({
+      id: Number(id),
+    });
+    if (!currentComment) {
+      throw new NotFoundException("This comment doesn't exist");
+    }
+    if (
+      user.role !== MemberRoles.ADMIN &&
+      user.id !== currentComment.authorId
+    ) {
+      throw new ForbiddenException(
+        "You don't have the permission to update this comment",
+      );
+    }
+    const updatedComment = await this.commentService.updateComment(id, comment);
+
+    return new CommentCreatePresenter(updatedComment);
   }
 
   @Delete(':id')

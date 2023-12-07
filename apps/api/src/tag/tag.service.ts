@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma, Tag } from '@prisma/client';
-import { CreateTagDto } from './tag.dto';
+import { CreateTagDto, UpdateTagDto } from './tag.dto';
 
 @Injectable()
 export class TagService {
@@ -44,6 +44,17 @@ export class TagService {
 
     return this.prisma.tag.create({
       data: tag,
+    });
+  }
+
+  async updateTag(id: string, data: UpdateTagDto): Promise<Tag> {
+    const post: Prisma.TagUpdateInput = {
+      ...data,
+    };
+
+    return this.prisma.tag.update({
+      data: post,
+      where: { id: Number(id) },
     });
   }
 
