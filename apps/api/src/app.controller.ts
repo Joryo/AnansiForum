@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Get, Res } from '@nestjs/common';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
@@ -22,8 +22,18 @@ export class AppController {
     description: 'Access Token',
     type: AccessTokenDto,
   })
-  async login(@Request() req): Promise<AccessTokenDto> {
-    return this.authService.login(req.user);
+  async login(@Request() req, @Res() res) {
+    this.authService.login(req.user, res);
+  }
+
+  @ApiTags('Auth')
+  @Post('auth/refresh')
+  async logout(@Request() req, @Res() res) {
+    if (!req.cookies?.refresh_token) {
+      res.status(401).send();
+      return;
+    }
+    this.authService.refresh(req.cookies.refresh_token, res);
   }
 
   @ApiExcludeEndpoint()

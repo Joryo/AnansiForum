@@ -79,6 +79,13 @@ export class MemberService {
     });
   }
 
+  async updateRefreshToken(id: string, refreshToken: string): Promise<Member> {
+    return this.prisma.member.update({
+      data: { refreshToken },
+      where: { id: Number(id) },
+    });
+  }
+
   async encryptPassword(password: string): Promise<string> {
     return bcrypt.hash(password, 10);
   }

@@ -6,7 +6,8 @@ CREATE TABLE "Member" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "role" TEXT NOT NULL
+    "role" TEXT NOT NULL,
+    "refreshToken" TEXT
 );
 
 -- CreateTable

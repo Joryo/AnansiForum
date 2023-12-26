@@ -18,6 +18,7 @@ model Member {
   password String
   name  String
   role  String
+  refreshToken String?
   posts Post[]
   comments Comment[]
 }
