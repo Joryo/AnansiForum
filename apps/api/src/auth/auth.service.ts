@@ -44,10 +44,11 @@ export class AuthService {
       refreshToken,
     };
 
-    this.sendLoginResponse(login, res, null);
+    this.sendLoginResponse(login, res, member);
   }
 
   async refresh(refreshToken: string, res) {
+    console.log('refreshToken', refreshToken);
     const payload = this.jwtService.verify(refreshToken);
     const member = await this.memberService.member({
       id: payload.id,
@@ -117,6 +118,7 @@ export class AuthService {
     };
   }
 
+  //TODO: Hide crypted refresh token in member (look at DTO ?)
   sendLoginResponse(login: Login, res, member) {
     res.cookie('refresh_token', login.refreshToken, {
       httpOnly: true,
@@ -124,16 +126,9 @@ export class AuthService {
       sameSite: 'strict',
     });
 
-    if (member) {
-      res.header('X-Access-token', login.accessToken);
-      res.json({
-        ...member,
-      });
-      return;
-    }
-
+    res.header('X-Access-token', login.accessToken);
     res.json({
-      access_token: login.accessToken,
+      ...member,
     });
   }
 }

@@ -9,6 +9,11 @@ patchNestJsSwagger();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
+  app.enableCors({
+    origin: 'http://localhost:3000', //TODO: Use env variable
+    exposedHeaders: ['X-Access-Token', 'Set-Cookie'],
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Anansi Forum API')
