@@ -66,6 +66,7 @@ export class PostController {
     };
 
     const posts = await this.postService.posts(params);
+    console.log(posts)
 
     return posts.map((post) => new PostGetPresenter(post));
   }

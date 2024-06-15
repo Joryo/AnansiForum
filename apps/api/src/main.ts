@@ -9,6 +9,8 @@ patchNestJsSwagger();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
+
+  //TODO: Push origin to env variable
   app.enableCors({
     origin: 'http://localhost:3000', //TODO: Use env variable
     exposedHeaders: ['X-Access-Token', 'Set-Cookie'],
@@ -29,6 +31,7 @@ async function bootstrap() {
     },
   });
 
-  await app.listen(3001);
+  //TODO: Use env variable
+  await app.listen(3002);
 }
 bootstrap();

@@ -1,8 +1,11 @@
-const API_URL = "http://localhost:3001";
+import queryString from "querystring";
+
+//TODO: Push in env variable
+const API_URL = "http://localhost:3002";
 
 class Api {
-  static async get(path: string) {
-    return this.fetchApi(path, "GET", null);
+  static async get(path: string, searchParams?: queryString.ParsedUrlQueryInput | undefined) {
+    return this.fetchApi(`${path}${searchParams ? `?${queryString.stringify(searchParams)}` : ''}`, "GET", null);
   }
 
   static async post(path: string, data: any) {

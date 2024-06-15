@@ -20,7 +20,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const savedUser = localStorage.getItem("user");
+  const savedUser =
+    typeof window !== "undefined" ? localStorage.getItem("user") : null;
 
   return (
     <UserContext.Provider

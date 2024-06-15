@@ -37,6 +37,8 @@ export class PostService {
       orderBy,
       include: {
         tags: true,
+        author: true,
+        comments: true,
       },
     });
   }

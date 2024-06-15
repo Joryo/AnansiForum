@@ -1,16 +1,16 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Next.js + NextUI",
-  description: "Make beautiful websites regardless of your design experience.",
+  name: "Anansi Forum",
+  description: "Simple server.",
   navItems: [
     {
-      label: "Last subjects",
+      label: "Last posts",
       href: "/",
     },
     {
-      label: "New subject",
-      href: "/subjects/new",
+      label: "New post",
+      href: "/posts/new",
     },
     {
       label: "Account",
@@ -23,12 +23,12 @@ export const siteConfig = {
   ],
   navMenuItems: [
     {
-      label: "Last subjects",
+      label: "Last posts",
       href: "/",
     },
     {
-      label: "New subject",
-      href: "/subjects/new",
+      label: "New post",
+      href: "/posts/new",
     },
     {
       label: "Account",
