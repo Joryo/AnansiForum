@@ -43,8 +43,8 @@ export class PostService {
           comments: {
             select: {
               id: true,
-            }
-          }
+            },
+          },
         },
       }),
     ]);

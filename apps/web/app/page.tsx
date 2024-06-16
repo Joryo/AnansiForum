@@ -77,14 +77,16 @@ export default function LastPosts() {
           </Link>
         ))}
       </ul>
-      <div className="flex justify-center">
-        <Pagination
-          showControls
-          initialPage={page}
-          total={Math.ceil(count / POSTS_BY_PAGE)}
-          onChange={(page) => handleChangePage(page)}
-        />
-      </div>
+      {count > 0 && (
+        <div className="flex justify-center">
+          <Pagination
+            showControls
+            initialPage={page}
+            total={Math.ceil(count / POSTS_BY_PAGE)}
+            onChange={(page) => handleChangePage(page)}
+          />
+        </div>
+      )}
     </div>
   );
 }
