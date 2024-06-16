@@ -1,10 +1,11 @@
 import queryString from "querystring";
+import { ApiResponse } from "@/types";
 
 //TODO: Push in env variable
 const API_URL = "http://localhost:3002";
 
 class Api {
-  static async get(path: string, searchParams?: queryString.ParsedUrlQueryInput | undefined) {
+  static async get(path: string, searchParams?: queryString.ParsedUrlQueryInput | undefined) : Promise<ApiResponse> {
     return this.fetchApi(`${path}${searchParams ? `?${queryString.stringify(searchParams)}` : ''}`, "GET", null);
   }
 
@@ -93,7 +94,7 @@ class Api {
     method: string,
     data: any,
     retry = false,
-  ): Promise<any> {
+  ): Promise<ApiResponse> {
     const request: RequestInit = {
       method,
       headers: {
@@ -119,7 +120,10 @@ class Api {
         throw new Error(`Error: ${res.status} ${res.statusText}`);
       }
 
-      return res.json();
+      const totalCount = parseInt(res.headers.get('X-Total-Count') || '0', 10);
+      const responseData = await res.json();
+
+      return { data: responseData, totalCount };
     } catch (error) {
       throw error;
     }

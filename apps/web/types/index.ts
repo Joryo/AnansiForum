@@ -28,3 +28,9 @@ export interface Post {
   tags: Tag[];
   createdAt: string;
 }
+
+
+export interface ApiResponse {
+  data: any;
+  totalCount: number;
+}

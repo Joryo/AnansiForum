@@ -12,13 +12,20 @@ import {
   NotFoundException,
   HttpCode,
   Query,
+  Res,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiResponse,
+  ApiTags,
+  ApiHeader,
+} from '@nestjs/swagger';
 import { PostService } from './post.service';
 import { CreatePostDto, GetPostsDto, UpdatePostDto } from './post.dto';
 import { MemberRoles } from 'src/enums/memberRoles';
 import { PostGetPresenter, PostCreatePresenter } from './post.presenter';
+import { Response } from 'express';
 
 @ApiTags('Post')
 @ApiBearerAuth()
@@ -49,14 +56,20 @@ export class PostController {
   }
 
   @Get()
+  @ApiHeader({
+    name: 'X-Total-Count',
+    description: 'The total number of posts for the current query',
+  })
   @ApiResponse({
     status: 200,
     description: 'The found posts',
     type: PostGetPresenter,
     isArray: true,
   })
-  //@ApiQuery({ type: string, name: 'limit', required: false })
-  async findMany(@Query() query: GetPostsDto) {
+  async findMany(
+    @Query() query: GetPostsDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const params = {
       skip: query.limit * (query.page - 1),
       take: query.limit,
@@ -65,8 +78,9 @@ export class PostController {
       },
     };
 
-    const posts = await this.postService.posts(params);
-    console.log(posts)
+    const [count, posts] = await this.postService.posts(params);
+
+    res.header('X-Total-Count', count.toString());
 
     return posts.map((post) => new PostGetPresenter(post));
   }
