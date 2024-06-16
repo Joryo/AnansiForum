@@ -19,6 +19,7 @@ export type Tag = {
   id: string;
   name: string;
 };
+
 export interface Post {
   id: string;
   title: string;
@@ -28,7 +29,6 @@ export interface Post {
   tags: Tag[];
   createdAt: string;
 }
-
 
 export interface ApiResponse {
   data: any;

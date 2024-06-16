@@ -37,3 +37,5 @@ yarn-error.log*
 
 # database
 apps/api/prisma/database.db
+
+.idea

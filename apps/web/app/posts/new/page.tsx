@@ -15,11 +15,9 @@ export default function PostsNewPage() {
   const [content, setContent] = useState("");
 
   const handleSubmit = () => {
-
-
     createPost(title, content)
       .then((post) => {
-        router.push(`/posts/${post.id}`);
+        router.push(`/posts/${post.data.id}`);
       })
       .catch((error) => {
         //TODO: Show alert error

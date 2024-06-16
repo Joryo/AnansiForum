@@ -6,13 +6,15 @@ import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { Image } from "@nextui-org/image";
 import * as dayjs from "dayjs";
-import LocalizedFormat from 'dayjs/plugin/localizedFormat'
+import LocalizedFormat from "dayjs/plugin/localizedFormat";
 
 import { Post } from "@/types";
 import { useRequireUser } from "@/hooks/requireUser";
 import { getPost } from "@/services/api/Posts";
+import { Loading } from "@/components/loading";
+import { CommentList } from "@/app/posts/[id]/commentList";
 
-dayjs.extend(LocalizedFormat)
+dayjs.extend(LocalizedFormat);
 
 export default function LastPosts() {
   useRequireUser();
@@ -21,14 +23,16 @@ export default function LastPosts() {
 
   useEffect(() => {
     const { id } = params;
+
     if (id) {
-      getPost(id.toString()).then((post) => {
-        setPost(post);
+      getPost(id.toString()).then((response) => {
+        setPost(response.data);
       });
+      //TODO: Handle error
     }
   }, []);
 
-  if (!post) return <div>Loading...</div>;
+  if (!post) return <Loading label="Loading post..." />;
 
   return (
     <div>
@@ -48,15 +52,14 @@ export default function LastPosts() {
         </CardHeader>
         <Divider />
         <CardBody>
-          <p>
-            {post.content}
-          </p>
+          <p>{post.content}</p>
         </CardBody>
         <Divider />
         <CardFooter className="text-sm italic text-default-500">
           {dayjs.default(post.createdAt).format("L LT")}
         </CardFooter>
       </Card>
+      <CommentList comments={post.comments} />
     </div>
   );
 }
