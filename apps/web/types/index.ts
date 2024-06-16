@@ -13,6 +13,8 @@ export type Author = {
 export type Comment = {
   id: string;
   content: string;
+  author: Author;
+  createdAt: string;
 };
 
 export type Tag = {

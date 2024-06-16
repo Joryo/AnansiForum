@@ -43,7 +43,7 @@ export default function LastPosts() {
     <div>
       <ul>
         {posts.map((post) => (
-          <Link key={post.id} passHref href={`/posts/${post.id}`}>
+          <Link key={`post-${post.id}`} passHref href={`/posts/${post.id}`}>
             <Card className="m-6 cursor-pointer">
               <CardHeader className="flex gap-3">
                 <Image

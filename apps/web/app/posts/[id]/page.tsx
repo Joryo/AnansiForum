@@ -59,7 +59,7 @@ export default function LastPosts() {
           {dayjs.default(post.createdAt).format("L LT")}
         </CardFooter>
       </Card>
-      <CommentList comments={post.comments} />
+      <CommentList postId={parseInt(post.id)} />
     </div>
   );
 }
