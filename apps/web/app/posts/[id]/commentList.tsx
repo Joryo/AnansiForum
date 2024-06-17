@@ -8,10 +8,11 @@ import { Divider } from "@nextui-org/divider";
 import { getComments } from "@/services/api/Comments";
 import { Comment } from "@/types";
 import { Loading } from "@/components/loading";
+import CommentForm from "@/app/posts/[id]/commentForm";
 
 const COMMENT_BY_PAGE = 20;
 
-export const CommentList = ({ postId }: { postId: number }) => {
+export default function CommentList({ postId }: { postId: number }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
@@ -23,15 +24,33 @@ export const CommentList = ({ postId }: { postId: number }) => {
       setComments(response.data);
       setLoading(false);
     });
-  }, [page]);
+  }, [page, loading]);
 
-  const handleChangePage = (page: number) => {
+  const handleChangePage = (page: number, scrollToBottom: boolean) => {
     setPage(page);
     setLoading(true);
-    // @ts-ignore
-    document
-      .getElementById("comment-anchor")
-      .scrollIntoView({ block: "center", behavior: "smooth" });
+
+    scrollToBottom
+      ? // @ts-ignore
+        document
+          .getElementById("bottom-comment-anchor")
+          .scrollIntoView({ block: "center", behavior: "smooth" })
+      : // @ts-ignore
+        document
+          .getElementById("comment-anchor")
+          .scrollIntoView({ block: "center", behavior: "smooth" });
+  };
+
+  const handleNewComment = () => {
+    if (
+      page === Math.ceil(count / COMMENT_BY_PAGE) &&
+      count % COMMENT_BY_PAGE === 0
+    ) {
+      handleChangePage(page + 1, true);
+
+      return;
+    }
+    handleChangePage(Math.ceil(count / COMMENT_BY_PAGE), true);
   };
 
   const pagination = (
@@ -40,7 +59,7 @@ export const CommentList = ({ postId }: { postId: number }) => {
         showControls
         initialPage={page}
         total={Math.ceil(count / COMMENT_BY_PAGE)}
-        onChange={(page) => handleChangePage(page)}
+        onChange={(page) => handleChangePage(page, false)}
       />
     </div>
   );
@@ -79,6 +98,8 @@ export const CommentList = ({ postId }: { postId: number }) => {
         ))}
       </ul>
       {count > 0 && pagination}
+      <span id={"bottom-comment-anchor"} />
+      <CommentForm postId={postId} onCreate={() => handleNewComment()} />
     </div>
   );
-};
+}

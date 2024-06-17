@@ -23,6 +23,6 @@ export const getComment = async (id: string) => {
   return Api.get(`${BASE_PATH}/${id}`);
 };
 
-export const createComment = async (title: string, content: string) => {
-  return Api.post(BASE_PATH, { title, content });
+export const createComment = async (postId: number, content: string) => {
+  return Api.post(BASE_PATH, { post: { id: postId }, content });
 };

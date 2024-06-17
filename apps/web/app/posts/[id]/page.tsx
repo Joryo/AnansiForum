@@ -12,7 +12,7 @@ import { Post } from "@/types";
 import { useRequireUser } from "@/hooks/requireUser";
 import { getPost } from "@/services/api/Posts";
 import { Loading } from "@/components/loading";
-import { CommentList } from "@/app/posts/[id]/commentList";
+import CommentList from "@/app/posts/[id]/commentList";
 
 dayjs.extend(LocalizedFormat);
 
