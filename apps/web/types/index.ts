@@ -4,23 +4,29 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export type Author = {
+export interface User {
   id: string;
   name: string;
   email: string;
-};
+}
 
-export type Comment = {
+export interface Author {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface Comment {
   id: string;
   content: string;
   author: Author;
   createdAt: string;
-};
+}
 
-export type Tag = {
+export interface Tag {
   id: string;
   name: string;
-};
+}
 
 export interface Post {
   id: string;

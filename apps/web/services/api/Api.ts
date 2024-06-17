@@ -21,6 +21,10 @@ class Api {
     return this.fetchApi(path, "POST", data);
   }
 
+  static async put(path: string, data: any) {
+    return this.fetchApi(path, "PUT", data);
+  }
+
   /**
    * Method to authenticate the user, register access token and user data in local storage
    * Save refresh tokenn in cookie

@@ -1,14 +1,18 @@
 "use client";
 
-import { title } from "@/components/primitives";
+import { useContext, useEffect } from "react";
+
 import { useRequireUser } from "@/hooks/requireUser";
+import { UserContext } from "@/contexts/UserContext";
 
 export default function AccountPage() {
   useRequireUser();
 
-  return (
-    <div>
-      <h1 className={title()}>Logout</h1>
-    </div>
-  );
+  const { setUser } = useContext(UserContext);
+
+  useEffect(() => {
+    setUser(null);
+  }, []);
+
+  return;
 }

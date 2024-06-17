@@ -12,4 +12,6 @@ export function useRequireUser() {
       router.push("/login");
     }
   }, [user, router]);
+
+  return user;
 }
