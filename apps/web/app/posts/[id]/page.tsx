@@ -1,24 +1,26 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { Image } from "@nextui-org/image";
 import * as dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
+import { Button } from "@nextui-org/button";
 
 import { Post } from "@/types";
 import { useRequireUser } from "@/hooks/requireUser";
-import { getPost } from "@/services/api/Posts";
+import { deletePost, getPost } from "@/services/api/Posts";
 import { Loading } from "@/components/loading";
 import CommentList from "@/app/posts/[id]/commentList";
 
 dayjs.extend(LocalizedFormat);
 
 export default function LastPosts() {
-  useRequireUser();
+  const user = useRequireUser();
   const params = useParams();
+  const router = useRouter();
   const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
@@ -31,6 +33,18 @@ export default function LastPosts() {
       //TODO: Handle error
     }
   }, []);
+
+  const handleDelete = () => {
+    if (!post) return;
+    deletePost(post.id.toString())
+      .then(() => {
+        router.push("/");
+      })
+      .catch((error) => {
+        //TODO: Handle error
+        console.error(error);
+      });
+  };
 
   if (!post) return <Loading label="Loading post..." />;
 
@@ -56,7 +70,18 @@ export default function LastPosts() {
         </CardBody>
         <Divider />
         <CardFooter className="text-sm italic text-default-500">
-          {dayjs.default(post.createdAt).format("L LT")}
+          <div className="flex gap-2 justify-between w-full">
+            <span>{dayjs.default(post.createdAt).format("L LT")}</span>
+            {user && post.author.id === user.id && (
+              <Button
+                color={"danger"}
+                size={"sm"}
+                onClick={() => handleDelete()}
+              >
+                Delete
+              </Button>
+            )}
+          </div>
         </CardFooter>
       </Card>
 

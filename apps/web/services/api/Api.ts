@@ -25,6 +25,10 @@ class Api {
     return this.fetchApi(path, "PUT", data);
   }
 
+  static async delete(path: string) {
+    return this.fetchApi(path, "DELETE", null);
+  }
+
   /**
    * Method to authenticate the user, register access token and user data in local storage
    * Save refresh tokenn in cookie
@@ -133,6 +137,10 @@ class Api {
       }
 
       const totalCount = parseInt(res.headers.get("X-Total-Count") || "0", 10);
+
+      if (res.status === 204) {
+        return { data: null, totalCount };
+      }
       const responseData = await res.json();
 
       return { data: responseData, totalCount };

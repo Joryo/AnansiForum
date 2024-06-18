@@ -4,15 +4,18 @@ import { Image } from "@nextui-org/image";
 import { Pagination } from "@nextui-org/pagination";
 import * as dayjs from "dayjs";
 import { Divider } from "@nextui-org/divider";
+import { Button } from "@nextui-org/button";
 
-import { getComments } from "@/services/api/Comments";
+import { deleteComment, getComments } from "@/services/api/Comments";
 import { Comment } from "@/types";
 import { Loading } from "@/components/loading";
 import CommentForm from "@/app/posts/[id]/commentForm";
+import { useRequireUser } from "@/hooks/requireUser";
 
 const COMMENT_BY_PAGE = 20;
 
 export default function CommentList({ postId }: { postId: number }) {
+  const user = useRequireUser();
   const [comments, setComments] = useState<Comment[]>([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
@@ -53,6 +56,17 @@ export default function CommentList({ postId }: { postId: number }) {
     handleChangePage(Math.ceil(count / COMMENT_BY_PAGE), true);
   };
 
+  const handleDelete = (commentId: string) => {
+    deleteComment(commentId)
+      .then(() => {
+        setLoading(true);
+      })
+      .catch((error) => {
+        //TODO: Handle error
+        console.error(error);
+      });
+  };
+
   const pagination = (
     <div className="flex justify-center">
       <Pagination
@@ -80,18 +94,29 @@ export default function CommentList({ postId }: { postId: number }) {
               <p>{comment.content}</p>
             </CardBody>
             <CardFooter className="text-sm italic text-default-500">
-              <Image
-                alt="user avatar"
-                height={20}
-                radius="sm"
-                src={`https://ui-avatars.com/api/?name=${comment.author.name}&background=random`}
-                width={20}
-              />
-              <div className="flex flex-col">
-                <p className="ml-2">
-                  {comment.author.name} -{" "}
-                  {dayjs.default(comment.createdAt).format("L LT")}
-                </p>
+              <div className="flex gap-2 justify-between w-full">
+                <div className="flex w-full">
+                  <Image
+                    alt="user avatar"
+                    height={20}
+                    radius="sm"
+                    src={`https://ui-avatars.com/api/?name=${comment.author.name}&background=random`}
+                    width={20}
+                  />
+                  <p className="ml-2">
+                    {comment.author.name} -{" "}
+                    {dayjs.default(comment.createdAt).format("L LT")}
+                  </p>
+                </div>
+                {user && comment.author.id === user.id && (
+                  <Button
+                    color={"danger"}
+                    size={"sm"}
+                    onClick={() => handleDelete(comment.id)}
+                  >
+                    Delete
+                  </Button>
+                )}
               </div>
             </CardFooter>
           </Card>

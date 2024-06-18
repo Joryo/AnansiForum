@@ -46,6 +46,7 @@ export const Navbar = () => {
     />
   );
 
+  //TODO: Fix hydration error here
   if (!user) {
     return null;
   }
