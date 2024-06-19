@@ -70,6 +70,7 @@ export class CommentController {
       where: {
         postId: query.postId,
       },
+      search: query.search,
     };
 
     const [count, comments] = await this.commentService.comments(params);

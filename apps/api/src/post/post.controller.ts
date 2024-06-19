@@ -55,6 +55,7 @@ export class PostController {
     return new PostGetPresenter(post);
   }
 
+  //TODO: Add limit glocally for all GET ALL requests
   @Get()
   @ApiHeader({
     name: 'X-Total-Count',

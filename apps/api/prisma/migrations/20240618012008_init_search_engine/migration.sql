@@ -1,8 +1,8 @@
-CREATE VIRTUAL TABLE post_fts USING fts5(post_id, title, content);
+CREATE VIRTUAL TABLE post_fts USING fts5(id, title, content);
 
 CREATE TRIGGER post_insert AFTER INSERT ON Post
 BEGIN
-  INSERT INTO post_fts (post_id, title, content)
+  INSERT INTO post_fts (id, title, content)
   VALUES (new.id, new.title, new.content);
 END;
 
@@ -11,19 +11,19 @@ BEGIN
   UPDATE post_fts SET
     title = new.title,
     content = new.content
-  WHERE post_id = old.id;
+  WHERE id = old.id;
 END;
 
 CREATE TRIGGER post_delete AFTER DELETE ON Post
 BEGIN
-  DELETE FROM post_fts WHERE post_id = old.id;
+  DELETE FROM post_fts WHERE id = old.id;
 END;
 
-CREATE VIRTUAL TABLE comment_fts USING fts5(comment_id, content);
+CREATE VIRTUAL TABLE comment_fts USING fts5(id, content);
 
 CREATE TRIGGER comment_insert AFTER INSERT ON Comment
 BEGIN
-  INSERT INTO comment_fts (comment_id, content)
+  INSERT INTO comment_fts (id, content)
   VALUES (new.id, new.content);
 END;
 
@@ -31,10 +31,10 @@ CREATE TRIGGER comment_update AFTER UPDATE ON Comment
 BEGIN
   UPDATE comment_fts SET
     content = new.content
-  WHERE comment_id = old.id;
+  WHERE id = old.id;
 END;
 
 CREATE TRIGGER comment_delete AFTER DELETE ON Comment
 BEGIN
-  DELETE FROM comment_fts WHERE comment_id = old.id;
+  DELETE FROM comment_fts WHERE id = old.id;
 END;

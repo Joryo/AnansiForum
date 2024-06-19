@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma, Comment } from '@prisma/client';
 import { CreateCommentDto, UpdateCommentDto } from './comment.dto';
+import { SearchEngine } from '../commons/services/searchEngine';
 
 @Injectable()
 export class CommentService {
@@ -22,10 +23,15 @@ export class CommentService {
     take?: number;
     cursor?: Prisma.CommentWhereUniqueInput;
     where?: Prisma.CommentWhereInput;
+    search?: string;
     orderBy?: Prisma.CommentOrderByWithRelationInput;
   }): Promise<[number, Comment[]]> {
     const { skip, take, cursor, where, orderBy } = params;
-
+    if (params.search) {
+      const searchEngine = new SearchEngine(this.prisma);
+      const foundCommentIds = await searchEngine.searchComments(params.search);
+      where.id = { in: foundCommentIds };
+    }
     return this.prisma.$transaction([
       this.prisma.comment.count({ where }),
       this.prisma.comment.findMany({

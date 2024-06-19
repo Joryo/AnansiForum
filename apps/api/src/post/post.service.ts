@@ -3,13 +3,11 @@ import { PrismaService } from '../prisma.service';
 import { Prisma, Post } from '@prisma/client';
 import { CreatePostDto, UpdatePostDto } from './post.dto';
 import { SearchEngine } from '../commons/services/searchEngine';
-import { SearchTables } from '../commons/enums/searchTables';
 
 interface QueryParams {
   skip?: number;
   take?: number;
   cursor?: Prisma.PostWhereUniqueInput;
-  where?: Prisma.PostWhereInput;
   orderBy?: Prisma.PostOrderByWithRelationInput;
   search?: string;
 }
@@ -32,12 +30,12 @@ export class PostService {
   }
 
   async posts(params: QueryParams): Promise<[number, Post[]]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    console.log(params);
+    const { skip, take, cursor, orderBy } = params;
+    const where: Prisma.PostWhereInput = {};
     if (params.search) {
-      const searchEngine = new SearchEngine(this.prisma, SearchTables.POST);
-      const foundPostIds = await searchEngine.search(params.search);
-      console.log(foundPostIds);
+      const searchEngine = new SearchEngine(this.prisma);
+      const foundPostIds = await searchEngine.searchPosts(params.search);
+      where.id = { in: foundPostIds };
     }
     return this.prisma.$transaction([
       this.prisma.post.count({ where }),

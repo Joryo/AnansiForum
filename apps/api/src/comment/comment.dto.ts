@@ -38,6 +38,7 @@ const GetCommentsDtoSchema = z.object({
     .default('createdAt')
     .describe('Order by'),
   order: z.enum(['asc', 'desc']).optional().default('asc').describe('Order'),
+  search: z.string().optional().default('').describe('Search'),
 });
 
 export class CreateCommentDto extends createZodDto(CreateCommentSchema) {}

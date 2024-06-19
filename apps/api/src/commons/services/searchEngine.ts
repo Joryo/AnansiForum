@@ -1,18 +1,34 @@
-import { SearchTablesT, SearchTables } from '../enums/searchTables';
 import { PrismaService } from '../../prisma.service';
 
-export class SearchEngine {
-  constructor(
-    private prisma: PrismaService,
-    private searchTable: SearchTablesT,
-  ) {}
+interface IdRow {
+  id: number;
+}
 
-  async search(search: string): Promise<number[]> {
-    const searchQuery = search.toLowerCase();
-    console.log(
-      `SELECT id FROM ${this.searchTable} WHERE document MATCH '${searchQuery}'`,
-    );
-    return this.prisma
-      .$queryRaw`SELECT id FROM ${this.searchTable} WHERE document MATCH '${searchQuery}'`;
+export class SearchEngine {
+  constructor(private prisma: PrismaService) {}
+
+  clearSearchTerms(search: string): string {
+    return search.toLowerCase().replaceAll(' ', ' AND ');
+  }
+
+  cleanResults(rows: IdRow[]): number[] {
+    return rows.map((row) => Number(row.id));
+  }
+
+  async searchPosts(search: string): Promise<number[]> {
+    const searchQuery = this.clearSearchTerms(search);
+    const rows = await this.prisma.$queryRaw<
+      IdRow[]
+    >`SELECT id FROM post_fts WHERE title MATCH ${searchQuery} or content MATCH ${searchQuery} ORDER BY RANK LIMIT 50`;
+    return this.cleanResults(rows);
+  }
+
+  async searchComments(search: string): Promise<number[]> {
+    const rows = await this.prisma.$queryRaw<
+      IdRow[]
+    >`SELECT id FROM comment_fts WHERE content MATCH ${this.clearSearchTerms(
+      search,
+    )} ORDER BY RANK LIMIT 50`;
+    return this.cleanResults(rows);
   }
 }
