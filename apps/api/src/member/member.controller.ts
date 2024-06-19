@@ -83,10 +83,7 @@ export class MemberController {
     }
 
     const savedMember = await this.memberService.createMember(member);
-    const login = await this.authService.login(savedMember);
-
-    res.header('X-Access-token', login.access_token);
-    res.json(savedMember);
+    this.authService.loginMember(savedMember, res);
   }
 
   @Put(':id')

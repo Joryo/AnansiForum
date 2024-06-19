@@ -34,3 +34,8 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# database
+apps/api/prisma/database.db
+
+.idea

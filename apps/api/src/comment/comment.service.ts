@@ -23,16 +23,22 @@ export class CommentService {
     cursor?: Prisma.CommentWhereUniqueInput;
     where?: Prisma.CommentWhereInput;
     orderBy?: Prisma.CommentOrderByWithRelationInput;
-  }): Promise<Comment[]> {
+  }): Promise<[number, Comment[]]> {
     const { skip, take, cursor, where, orderBy } = params;
 
-    return this.prisma.comment.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    return this.prisma.$transaction([
+      this.prisma.comment.count({ where }),
+      this.prisma.comment.findMany({
+        skip,
+        take,
+        cursor,
+        where,
+        orderBy,
+        include: {
+          author: true,
+        },
+      }),
+    ]);
   }
 
   async createComment(

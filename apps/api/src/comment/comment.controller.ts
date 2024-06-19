@@ -12,9 +12,15 @@ import {
   NotFoundException,
   HttpCode,
   Query,
+  Res,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CommentService } from './comment.service';
 import {
   CreateCommentDto,
@@ -27,6 +33,8 @@ import {
   CommentCreatePresenter,
 } from './comment.presenter';
 import { PostService } from 'src/post/post.service';
+import { Response } from 'express';
+
 @ApiTags('Comment')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -44,17 +52,29 @@ export class CommentController {
     type: CommentGetPresenter,
     isArray: true,
   })
+  @ApiHeader({
+    name: 'X-Total-Count',
+    description: 'The total number of comments for the current query',
+  })
   //@ApiQuery({ type: string, name: 'limit', required: false })
-  async findMany(@Query() query: GetCommentsDto) {
+  async findMany(
+    @Query() query: GetCommentsDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const params = {
       skip: query.limit * (query.page - 1),
       take: query.limit,
       orderBy: {
         [query.orderBy]: query.order,
       },
+      where: {
+        postId: query.postId,
+      },
     };
 
-    const comments = await this.commentService.comments(params);
+    const [count, comments] = await this.commentService.comments(params);
+
+    res.header('X-Total-Count', count.toString());
 
     return comments.map((comment) => new CommentGetPresenter(comment));
   }

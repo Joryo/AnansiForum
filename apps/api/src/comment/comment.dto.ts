@@ -15,6 +15,11 @@ const UpdateCommentSchema = z
   .strict();
 
 const GetCommentsDtoSchema = z.object({
+  postId: z
+    .string()
+    .transform((value) => parseInt(value))
+    .optional()
+    .describe('Post id of the comments'),
   limit: z
     .string()
     .transform((value) => parseInt(value))
@@ -36,5 +41,7 @@ const GetCommentsDtoSchema = z.object({
 });
 
 export class CreateCommentDto extends createZodDto(CreateCommentSchema) {}
+
 export class UpdateCommentDto extends createZodDto(UpdateCommentSchema) {}
+
 export class GetCommentsDto extends createZodDto(GetCommentsDtoSchema) {}
