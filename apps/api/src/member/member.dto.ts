@@ -1,6 +1,6 @@
 import * as z from 'nestjs-zod/z';
 import { createZodDto } from 'nestjs-zod/dto';
-import { MemberRoles } from '../enums/memberRoles';
+import { MemberRoles } from '../commons/enums/memberRoles';
 
 const BaseMemberSchema = z.object({
   email: z.string().email().describe('Email of the member'),
@@ -35,5 +35,7 @@ const MemberSchema = CreateMemberSchema.extend({
 });
 
 export class CreateMemberDto extends createZodDto(CreateMemberSchema) {}
+
 export class UpdateMemberDto extends createZodDto(UpdateMemberSchema) {}
+
 export class MemberDto extends createZodDto(MemberSchema) {}

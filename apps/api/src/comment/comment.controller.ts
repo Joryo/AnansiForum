@@ -27,7 +27,7 @@ import {
   GetCommentsDto,
   UpdateCommentDto,
 } from './comment.dto';
-import { MemberRoles } from 'src/enums/memberRoles';
+import { MemberRoles } from 'src/commons/enums/memberRoles';
 import {
   CommentGetPresenter,
   CommentCreatePresenter,

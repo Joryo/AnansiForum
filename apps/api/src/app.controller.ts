@@ -4,8 +4,8 @@ import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ApiExcludeEndpoint, ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApiResponse } from '@nestjs/swagger';
-import { AccessTokenDto } from './dto/accessToken';
-import { LoginDto } from './dto/login';
+import { AccessTokenDto } from './commons/dto/accessToken';
+import { LoginDto } from './commons/dto/login';
 
 @Controller()
 export class AppController {

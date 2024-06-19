@@ -36,8 +36,11 @@ const GetPostsDtoSchema = z.object({
     .default('createdAt')
     .describe('Order by'),
   order: z.enum(['asc', 'desc']).optional().default('desc').describe('Order'),
+  search: z.string().optional().default('').describe('Search'),
 });
 
 export class CreatePostDto extends createZodDto(CreatePostSchema) {}
+
 export class UpdatePostDto extends createZodDto(UpdatePostSchema) {}
+
 export class GetPostsDto extends createZodDto(GetPostsDtoSchema) {}

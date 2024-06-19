@@ -17,7 +17,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TagService } from './tag.service';
 import { CreateTagDto, GetTagsDto, UpdateTagDto } from './tag.dto';
-import { MemberRoles } from 'src/enums/memberRoles';
+import { MemberRoles } from 'src/commons/enums/memberRoles';
 import { TagGetPresenter, TagCreatePresenter } from './tag.presenter';
 
 @ApiTags('Tag')

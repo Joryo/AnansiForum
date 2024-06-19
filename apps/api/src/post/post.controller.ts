@@ -23,7 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { PostService } from './post.service';
 import { CreatePostDto, GetPostsDto, UpdatePostDto } from './post.dto';
-import { MemberRoles } from 'src/enums/memberRoles';
+import { MemberRoles } from 'src/commons/enums/memberRoles';
 import { PostGetPresenter, PostCreatePresenter } from './post.presenter';
 import { Response } from 'express';
 
@@ -76,6 +76,7 @@ export class PostController {
       orderBy: {
         [query.orderBy]: query.order,
       },
+      search: query.search,
     };
 
     const [count, posts] = await this.postService.posts(params);
