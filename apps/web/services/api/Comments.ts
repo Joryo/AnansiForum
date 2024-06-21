@@ -1,22 +1,23 @@
+import queryString from "querystring";
+
 import Api from "./Api";
 
 import { ApiResponse } from "@/types";
 
 const BASE_PATH = "/comments";
-const DEFAULT_ORDER = "createdAt";
+
+export interface CommentQueryParams extends queryString.ParsedUrlQueryInput {
+  page: number;
+  limit: number;
+  postId?: number;
+  orderBy?: string;
+  search?: string;
+}
 
 export const getComments = async (
-  postId: number,
-  page: number,
-  limit: number,
-  orderBy?: string,
+  searchParams: CommentQueryParams,
 ): Promise<ApiResponse> => {
-  return Api.get(BASE_PATH, {
-    postId,
-    page,
-    limit,
-    orderBy: orderBy ?? DEFAULT_ORDER,
-  });
+  return Api.get(BASE_PATH, searchParams);
 };
 
 export const getComment = async (id: string) => {

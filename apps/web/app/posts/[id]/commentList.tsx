@@ -22,7 +22,7 @@ export default function CommentList({ postId }: { postId: number }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getComments(postId, page, COMMENT_BY_PAGE).then((response) => {
+    getComments({ limit: COMMENT_BY_PAGE, page, postId }).then((response) => {
       setCount(response.totalCount);
       setComments(response.data);
       setLoading(false);

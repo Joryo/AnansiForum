@@ -33,7 +33,6 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning lang="en">
-      <head />
       <body
         className={clsx(
           "min-h-screen bg-gradient-light dark:bg-gradient-dark font-sans antialiased",

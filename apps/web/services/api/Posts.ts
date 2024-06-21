@@ -1,20 +1,22 @@
+import queryString from "querystring";
+
 import Api from "./Api";
 
 import { ApiResponse } from "@/types";
 
 const BASE_PATH = "/posts";
-const DEFAULT_ORDER = "createdAt";
+
+export interface PostQueryParams extends queryString.ParsedUrlQueryInput {
+  page: number;
+  limit: number;
+  orderBy?: string;
+  search?: string;
+}
 
 export const getPosts = async (
-  page: number,
-  limit: number,
-  orderBy?: string,
+  queryParams: PostQueryParams,
 ): Promise<ApiResponse> => {
-  return Api.get(BASE_PATH, {
-    page,
-    limit,
-    orderBy: orderBy ?? DEFAULT_ORDER,
-  });
+  return Api.get(BASE_PATH, queryParams);
 };
 
 export const getPost = async (id: string) => {
