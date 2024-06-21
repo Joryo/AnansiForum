@@ -10,6 +10,7 @@ import { getPosts } from "@/services/api/Posts";
 import { getComments } from "@/services/api/Comments";
 import { Loading } from "@/components/loading";
 import PostCard from "@/components/postCard";
+import { CommentCard } from "@/components/commentCard";
 
 export default function Search() {
   useRequireUser();
@@ -46,7 +47,7 @@ export default function Search() {
     <>
       <h1>{posts.length} post(s) found</h1>
       <ul>
-        {posts.map((post) => (
+        {posts.map((post: Post) => (
           <li key={post.id}>
             <PostCard highlights={query.split(" ")} post={post} />
           </li>
@@ -59,8 +60,10 @@ export default function Search() {
     <>
       <h1>{comments.length} comment(s) found</h1>
       <ul>
-        {comments.map((comment) => (
-          <li key={comment.id}>{comment.content}</li>
+        {comments.map((comment: Comment) => (
+          <li key={comment.id}>
+            <CommentCard comment={comment} highlights={query.split(" ")} />
+          </li>
         ))}
       </ul>
     </>

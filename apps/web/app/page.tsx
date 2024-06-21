@@ -1,9 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+
 import { Pagination } from "@nextui-org/pagination";
 import * as dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { Post } from "@/types";
 import { useRequireUser } from "@/hooks/requireUser";
@@ -41,10 +42,10 @@ export default function LastPosts() {
   return (
     <div>
       <ul>
-        {posts.map((post) => (
+        {posts.map((post: Post) => (
           <li key={`post-${post.id}`}>
             <Link passHref href={`/posts/${post.id}`}>
-              <PostCard post={post} />
+              <PostCard highlights={[]} post={post} />
             </Link>
           </li>
         ))}

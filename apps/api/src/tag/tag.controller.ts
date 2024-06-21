@@ -37,7 +37,7 @@ export class TagController {
   //@ApiQuery({ type: string, name: 'limit', required: false })
   async findMany(@Query() query: GetTagsDto) {
     const params = {
-      skip: query.limit * (query.page - 1),
+      skip: query.page ? query.limit * (query.page - 1) : 0,
       take: query.limit,
       orderBy: {
         [query.orderBy]: query.order,

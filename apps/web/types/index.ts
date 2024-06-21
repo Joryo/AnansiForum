@@ -21,6 +21,7 @@ export interface Comment {
   content: string;
   author: Author;
   createdAt: string;
+  post: { id: string };
 }
 
 export interface Tag {

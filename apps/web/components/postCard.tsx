@@ -7,6 +7,7 @@ import * as dayjs from "dayjs";
 import * as sanitizeHtml from "sanitize-html";
 
 import { Post } from "@/types";
+import { highlightWordInText } from "@/services/text";
 
 dayjs.extend(LocalizedFormat);
 
@@ -23,15 +24,6 @@ export default function PostCard({
   let content = sanitizeHtml(post.content);
   let title = sanitizeHtml(post.title);
 
-  const highlightWordInText = (text: string, word: string) => {
-    const regex = new RegExp(word, "gi");
-
-    return text.replace(
-      regex,
-      `<span style="background-color: #F9E79F;color:black;padding: 3px;border-radius: 5px"><b>${word}</b></span>`,
-    );
-  };
-
   highlights.forEach((word) => {
     const isContentTooLong = content.length > MAX_CONTENT_LENGTH;
 
@@ -39,7 +31,10 @@ export default function PostCard({
 
     // If the content is too long, we cut it to the last word that matches the search
     if (isContentTooLong) {
-      const lastWordIndex = content.lastIndexOf(word);
+      const lastWordIndex =
+        content.lastIndexOf(word) < MAX_CONTENT_LENGTH
+          ? MAX_CONTENT_LENGTH
+          : content.lastIndexOf(word);
 
       content = content.slice(0, lastWordIndex + word.length) + "...";
     }

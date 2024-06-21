@@ -32,6 +32,7 @@ export class CommentService {
       const foundCommentIds = await searchEngine.searchComments(params.search);
       where.id = { in: foundCommentIds };
     }
+
     return this.prisma.$transaction([
       this.prisma.comment.count({ where }),
       this.prisma.comment.findMany({
@@ -42,6 +43,11 @@ export class CommentService {
         orderBy,
         include: {
           author: true,
+          post: {
+            select: {
+              id: true,
+            },
+          },
         },
       }),
     ]);

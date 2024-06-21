@@ -72,7 +72,7 @@ export class PostController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const params = {
-      skip: query.limit * (query.page - 1),
+      skip: query.page ? query.limit * (query.page - 1) : 0,
       take: query.limit,
       orderBy: {
         [query.orderBy]: query.order,
