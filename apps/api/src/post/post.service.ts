@@ -2,6 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma, Post } from '@prisma/client';
 import { CreatePostDto, UpdatePostDto } from './post.dto';
+import { SearchEngine } from '../commons/services/searchEngine';
+
+interface QueryParams {
+  skip?: number;
+  take?: number;
+  cursor?: Prisma.PostWhereUniqueInput;
+  orderBy?: Prisma.PostOrderByWithRelationInput;
+  search?: string;
+}
 
 @Injectable()
 export class PostService {
@@ -20,15 +29,14 @@ export class PostService {
     });
   }
 
-  async posts(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.PostWhereUniqueInput;
-    where?: Prisma.PostWhereInput;
-    orderBy?: Prisma.PostOrderByWithRelationInput;
-  }): Promise<[number, Post[]]> {
-    const { skip, take, cursor, where, orderBy } = params;
-
+  async posts(params: QueryParams): Promise<[number, Post[]]> {
+    const { skip, take, cursor, orderBy } = params;
+    const where: Prisma.PostWhereInput = {};
+    if (params.search) {
+      const searchEngine = new SearchEngine(this.prisma);
+      const foundPostIds = await searchEngine.searchPosts(params.search);
+      where.id = { in: foundPostIds };
+    }
     return this.prisma.$transaction([
       this.prisma.post.count({ where }),
       this.prisma.post.findMany({

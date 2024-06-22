@@ -12,7 +12,7 @@ async function bootstrap() {
 
   //TODO: Push origin to env variable
   app.enableCors({
-    origin: 'http://localhost:3001', //TODO: Use env variable
+    origin: 'http://localhost:3000', //TODO: Use env variable
     exposedHeaders: ['X-Access-Token', 'Set-Cookie', 'X-Total-Count'],
     credentials: true,
   });

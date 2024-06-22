@@ -27,7 +27,7 @@ import {
   GetCommentsDto,
   UpdateCommentDto,
 } from './comment.dto';
-import { MemberRoles } from 'src/enums/memberRoles';
+import { MemberRoles } from 'src/commons/enums/memberRoles';
 import {
   CommentGetPresenter,
   CommentCreatePresenter,
@@ -62,7 +62,7 @@ export class CommentController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const params = {
-      skip: query.limit * (query.page - 1),
+      skip: query.page ? query.limit * (query.page - 1) : 0,
       take: query.limit,
       orderBy: {
         [query.orderBy]: query.order,
@@ -70,6 +70,7 @@ export class CommentController {
       where: {
         postId: query.postId,
       },
+      search: query.search,
     };
 
     const [count, comments] = await this.commentService.comments(params);

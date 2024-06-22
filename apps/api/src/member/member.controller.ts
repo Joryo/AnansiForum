@@ -18,7 +18,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateMemberDto, MemberDto, UpdateMemberDto } from './member.dto';
 import { MemberService } from './member.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { MemberRoles } from 'src/enums/memberRoles';
+import { MemberRoles } from 'src/commons/enums/memberRoles';
 import { jwtConstants } from 'src/auth/constants';
 import { MemberCreatePresenter } from './member.presenter';
 import { AuthService } from 'src/auth/auth.service';

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { MemberGetPresenter } from '../member/member.presenter';
+import { PostGetPresenter } from '../post/post.presenter';
 
 export class CommentGetPresenter {
   @ApiProperty()
@@ -12,13 +13,18 @@ export class CommentGetPresenter {
   updatedAt: Date;
   @ApiProperty()
   author: MemberGetPresenter;
+  @ApiProperty()
+  post: { id: number };
 
-  constructor(post) {
-    this.id = post.id;
-    this.content = post.content;
-    this.createdAt = post.createdAt;
-    this.updatedAt = post.updatedAt;
-    this.author = post.author ? new MemberGetPresenter(post.author) : null;
+  constructor(comment) {
+    this.id = comment.id;
+    this.content = comment.content;
+    this.createdAt = comment.createdAt;
+    this.updatedAt = comment.updatedAt;
+    this.author = comment.author
+      ? new MemberGetPresenter(comment.author)
+      : null;
+    this.post = comment.post ? { id: comment.post.id } : null;
   }
 }
 
@@ -30,9 +36,9 @@ export class CommentCreatePresenter {
   @ApiProperty()
   createdAt: Date;
 
-  constructor(post) {
-    this.id = post.id;
-    this.content = post.content;
-    this.createdAt = post.createdAt;
+  constructor(comment) {
+    this.id = comment.id;
+    this.content = comment.content;
+    this.createdAt = comment.createdAt;
   }
 }

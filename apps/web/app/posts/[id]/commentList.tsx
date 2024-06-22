@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import { Card, CardBody, CardFooter } from "@nextui-org/card";
-import { Image } from "@nextui-org/image";
 import { Pagination } from "@nextui-org/pagination";
-import * as dayjs from "dayjs";
 import { Divider } from "@nextui-org/divider";
 
 import { getComments } from "@/services/api/Comments";
 import { Comment } from "@/types";
 import { Loading } from "@/components/loading";
 import CommentForm from "@/app/posts/[id]/commentForm";
+import { CommentCard } from "@/components/commentCard";
 
 const COMMENT_BY_PAGE = 20;
 
@@ -19,7 +17,7 @@ export default function CommentList({ postId }: { postId: number }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getComments(postId, page, COMMENT_BY_PAGE).then((response) => {
+    getComments({ limit: COMMENT_BY_PAGE, page, postId }).then((response) => {
       setCount(response.totalCount);
       setComments(response.data);
       setLoading(false);
@@ -74,27 +72,14 @@ export default function CommentList({ postId }: { postId: number }) {
       <Divider className={"mb-4"} />
       {count > 0 && pagination}
       <ul>
-        {comments.map((comment) => (
-          <Card key={`comment-${comment.id}`} className="m-6">
-            <CardBody>
-              <p>{comment.content}</p>
-            </CardBody>
-            <CardFooter className="text-sm italic text-default-500">
-              <Image
-                alt="user avatar"
-                height={20}
-                radius="sm"
-                src={`https://ui-avatars.com/api/?name=${comment.author.name}&background=random`}
-                width={20}
-              />
-              <div className="flex flex-col">
-                <p className="ml-2">
-                  {comment.author.name} -{" "}
-                  {dayjs.default(comment.createdAt).format("L LT")}
-                </p>
-              </div>
-            </CardFooter>
-          </Card>
+        {comments.map((comment: Comment) => (
+          <li key={`comment-${comment.id}`}>
+            <CommentCard
+              comment={comment}
+              highlights={[]}
+              onDelete={() => setLoading(true)}
+            />
+          </li>
         ))}
       </ul>
       {count > 0 && pagination}

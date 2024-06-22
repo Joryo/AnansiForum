@@ -16,7 +16,8 @@ import { Input } from "@nextui-org/input";
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -25,6 +26,12 @@ import { SearchIcon } from "@/components/icons";
 
 export const Navbar = () => {
   const { user } = useContext(UserContext);
+  const router = useRouter();
+  const [search, setSearch] = useState("");
+  const handleSearch = (query: string) => {
+    router.push(`/search?query=${query}`);
+  };
+
   const searchInput = (
     <Input
       aria-label="Search"
@@ -43,11 +50,21 @@ export const Navbar = () => {
         <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
       }
       type="search"
+      value={search}
+      onChange={(e) => {
+        const query = e.target.value;
+
+        setSearch(query);
+        if (e.target.value.length > 2) {
+          handleSearch(query);
+        }
+      }}
     />
   );
 
+  //TODO: Fix hydration error here
   if (!user) {
-    return null;
+    //return null;
   }
 
   return (

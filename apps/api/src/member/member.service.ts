@@ -4,7 +4,7 @@ import { Prisma, Member } from '@prisma/client';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateMemberDto, UpdateMemberDto } from './member.dto';
-import { MemberRoles } from 'src/enums/memberRoles';
+import { MemberRoles } from 'src/commons/enums/memberRoles';
 
 @Injectable()
 export class MemberService {

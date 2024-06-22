@@ -23,7 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { PostService } from './post.service';
 import { CreatePostDto, GetPostsDto, UpdatePostDto } from './post.dto';
-import { MemberRoles } from 'src/enums/memberRoles';
+import { MemberRoles } from 'src/commons/enums/memberRoles';
 import { PostGetPresenter, PostCreatePresenter } from './post.presenter';
 import { Response } from 'express';
 
@@ -55,6 +55,7 @@ export class PostController {
     return new PostGetPresenter(post);
   }
 
+  //TODO: Add limit glocally for all GET ALL requests
   @Get()
   @ApiHeader({
     name: 'X-Total-Count',
@@ -71,11 +72,12 @@ export class PostController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const params = {
-      skip: query.limit * (query.page - 1),
+      skip: query.page ? query.limit * (query.page - 1) : 0,
       take: query.limit,
       orderBy: {
         [query.orderBy]: query.order,
       },
+      search: query.search,
     };
 
     const [count, posts] = await this.postService.posts(params);
