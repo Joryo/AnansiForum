@@ -1,0 +1,14 @@
+{
+  "name": "@repo/schemas",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
+}

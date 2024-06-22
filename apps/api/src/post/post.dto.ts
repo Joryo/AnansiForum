@@ -1,48 +1,8 @@
-import * as z from 'nestjs-zod/z';
 import { createZodDto } from 'nestjs-zod/dto';
-import { PaginationSchema } from '../commons/schemas/pagination';
+import { PostSchemas } from '@repo/schemas';
 
-const MIN_CONTENT_LENGTH = 10;
+export class CreatePostDto extends createZodDto(PostSchemas.CreatePost) {}
 
-const CreatePostSchema = z.object({
-  title: z
-    .string()
-    .min(1, "Title can't be empty")
-    .describe('Title of the post'),
-  content: z
-    .string()
-    .min(MIN_CONTENT_LENGTH, 'Content has minimum size')
-    .describe('Content of the post'),
-  tags: z
-    .array(z.object({ id: z.number().int() }))
-    .optional()
-    .default([]),
-});
+export class UpdatePostDto extends createZodDto(PostSchemas.UpdatePost) {}
 
-const UpdatePostSchema = z
-  .object({
-    content: z
-      .string()
-      .min(MIN_CONTENT_LENGTH, 'Content has minimum size')
-      .optional()
-      .describe('Content of the post'),
-    tags: z.array(z.object({ id: z.number().int() })).optional(),
-  })
-  .strict();
-
-const GetPostsDtoSchema = z.object({
-  ...PaginationSchema.shape,
-  orderBy: z
-    .enum(['createdAt'])
-    .optional()
-    .default('createdAt')
-    .describe('Order by'),
-  order: z.enum(['asc', 'desc']).optional().default('desc').describe('Order'),
-  search: z.string().optional().default('').describe('Search'),
-});
-
-export class CreatePostDto extends createZodDto(CreatePostSchema) {}
-
-export class UpdatePostDto extends createZodDto(UpdatePostSchema) {}
-
-export class GetPostsDto extends createZodDto(GetPostsDtoSchema) {}
+export class GetPostsDto extends createZodDto(PostSchemas.GetPostsDto) {}
