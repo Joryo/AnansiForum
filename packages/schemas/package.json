@@ -1,14 +1,42 @@
 {
   "name": "@repo/schemas",
-  "type": "module",
+  "type": "commonjs",
   "exports": {
-    ".": "./index.ts"
+    "./post": {
+      "types": "./src/post.ts",
+      "default": "./dist/post.js"
+    },
+    "./comment": {
+      "types": "./src/comment.ts",
+      "default": "./dist/comment.js"
+    },
+    "./member": {
+      "types": "./src/member.ts",
+      "default": "./dist/member.js"
+    },
+    "./tag": {
+      "types": "./src/tag.ts",
+      "default": "./dist/tag.js"
+    },
+    "./memberRoles": {
+      "types": "./src/memberRoles.ts",
+      "default": "./dist/memberRoles.js"
+    },
+    ".": {
+      "types": "./src/post.ts",
+      "default": "./dist/post.js"
+    }
   },
   "scripts": {
-    "lint": "eslint . --max-warnings 0",
-    "check-types": "tsc --noEmit"
+    "dev": "./node_modules/typescript/bin/tsc --watch",
+    "build": "./node_modules/typescript/bin/tsc"
   },
   "dependencies": {
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "nestjs-zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "tsconfig": "*",
+    "typescript": "latest"
   }
 }

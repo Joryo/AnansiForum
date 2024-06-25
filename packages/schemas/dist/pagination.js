@@ -1,6 +1,8 @@
-import * as z from "nestjs-zod/z";
-
-export const PaginationSchema = z.object({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PaginationSchema = void 0;
+const z = require("nestjs-zod/z");
+exports.PaginationSchema = z.object({
     limit: z.coerce
         .number()
         .int()
@@ -16,3 +18,4 @@ export const PaginationSchema = z.object({
         .default(1)
         .describe('Page of items'),
 });
+//# sourceMappingURL=pagination.js.map

@@ -24,12 +24,15 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document, {
-    swaggerOptions: {
-      persistAuthorization: true,
-    },
-  });
+  // TODO: Fix swagger
+  /*
+            const document = SwaggerModule.createDocument(app, config);
+            SwaggerModule.setup('api', app, document, {
+              swaggerOptions: {
+                persistAuthorization: true,
+              },
+            });
+            */
 
   //TODO: Use env variable
   await app.listen(3002);

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "nestjs-zod/z";
 import {PaginationSchema} from "./pagination";
 
 export const CreateComment = z.object({
