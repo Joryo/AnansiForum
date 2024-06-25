@@ -20,7 +20,7 @@ export const UpdateComment = z
     })
     .strict();
 
-export const GetCommentsDto = z.object({
+export const GetComments = z.object({
     ...PaginationSchema.shape,
     postId: z.coerce
         .number()

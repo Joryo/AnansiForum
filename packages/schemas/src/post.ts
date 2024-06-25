@@ -29,7 +29,7 @@ export const UpdatePost = z
     })
     .strict();
 
-export const GetPostsDto = z.object({
+export const GetPosts = z.object({
     ...PaginationSchema.shape,
     orderBy: z
         .enum(['createdAt'])

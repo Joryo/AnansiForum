@@ -16,7 +16,7 @@ export const CreateTag = z.object({
 
 export const UpdateTag = CreateTag.extend({});
 
-export const GetTagsDto = z.object({
+export const GetTags = z.object({
     ...PaginationSchema.shape,
     orderBy: z.enum(['name']).optional().default('name').describe('Order by'),
     order: z.enum(['asc', 'desc']).optional().default('asc').describe('Order'),

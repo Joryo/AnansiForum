@@ -1,14 +1,17 @@
-import { createZodDto } from 'nestjs-zod/dto';
-import { CommentSchemas } from '@repo/schemas';
+import {createZodDto} from 'nestjs-zod/dto';
+import {CreateComment, UpdateComment, GetComments} from '@repo/schemas';
 
 export class CreateCommentDto extends createZodDto(
-  CommentSchemas.CreateComment,
-) {}
+    CreateComment,
+) {
+}
 
 export class UpdateCommentDto extends createZodDto(
-  CommentSchemas.UpdateComment,
-) {}
+    UpdateComment,
+) {
+}
 
 export class GetCommentsDto extends createZodDto(
-  CommentSchemas.GetCommentsDto,
-) {}
+    GetComments,
+) {
+}
