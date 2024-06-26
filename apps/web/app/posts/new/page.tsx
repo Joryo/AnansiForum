@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreatePost } from "@repo/schemas";
+import { toast } from "react-toastify";
 
 import { useRequireUser } from "@/hooks/requireUser";
 import { createPost, CreatePostData } from "@/services/api/Posts";
@@ -25,11 +26,11 @@ export default function PostsNewPage() {
   const onSubmit = (data: CreatePostData) => {
     createPost(data)
       .then((post) => {
+        toast.success("Post created");
         router.push(`/posts/${post.data.id}`);
       })
-      .catch((error) => {
-        //TODO: Show alert error
-        console.error(error);
+      .catch(() => {
+        toast.error("Failed to create post");
       });
   };
 

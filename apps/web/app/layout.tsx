@@ -1,12 +1,15 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
+import { ToastContainer } from "react-toastify";
 
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
+
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: {
@@ -46,6 +49,18 @@ export default function RootLayout({
               {children}
             </main>
             <footer className="w-full flex items-center justify-center py-3" />
+            <ToastContainer
+              closeOnClick
+              draggable
+              pauseOnFocusLoss
+              pauseOnHover
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              position="bottom-center"
+              rtl={false}
+              theme="colored"
+            />
           </div>
         </Providers>
       </body>
