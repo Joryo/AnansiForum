@@ -6,15 +6,15 @@ export declare const BaseMemberSchema: z.ZodObject<{
     createdAt: z.ZodDefault<z.ZodDate>;
     updatedAt: z.ZodDefault<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
-    name?: string;
     createdAt?: Date;
     email?: string;
+    name?: string;
     password?: string;
     updatedAt?: Date;
 }, {
-    name?: string;
     createdAt?: Date;
     email?: string;
+    name?: string;
     password?: string;
     updatedAt?: Date;
 }>;
@@ -30,16 +30,16 @@ export declare const CreateMember: z.ZodObject<z.objectUtil.extendShape<{
         readonly MEMBER: "member";
     }>>>;
 }>, "strip", z.ZodTypeAny, {
-    name?: string;
     createdAt?: Date;
     email?: string;
+    name?: string;
     password?: string;
     updatedAt?: Date;
     role?: "admin" | "member";
 }, {
-    name?: string;
     createdAt?: Date;
     email?: string;
+    name?: string;
     password?: string;
     updatedAt?: Date;
     role?: "admin" | "member";
@@ -53,13 +53,13 @@ export declare const UpdateMember: z.ZodObject<{
         readonly MEMBER: "member";
     }>>;
 }, "strip", z.ZodTypeAny, {
-    name?: string;
     email?: string;
+    name?: string;
     password?: string;
     role?: "admin" | "member";
 }, {
-    name?: string;
     email?: string;
+    name?: string;
     password?: string;
     role?: "admin" | "member";
 }>;
@@ -77,18 +77,18 @@ export declare const Member: z.ZodObject<z.objectUtil.extendShape<z.objectUtil.e
 }>, {
     id: z.ZodNumber;
 }>, "strip", z.ZodTypeAny, {
-    name?: string;
     id?: number;
     createdAt?: Date;
     email?: string;
+    name?: string;
     password?: string;
     updatedAt?: Date;
     role?: "admin" | "member";
 }, {
-    name?: string;
     id?: number;
     createdAt?: Date;
     email?: string;
+    name?: string;
     password?: string;
     updatedAt?: Date;
     role?: "admin" | "member";

@@ -10,7 +10,7 @@ export const CreatePost = z.object({
         .describe('Title of the post'),
     content: z
         .string()
-        .min(MIN_CONTENT_LENGTH, 'Content has minimum size')
+        .min(MIN_CONTENT_LENGTH, 'Content has minimum size of 10 characters')
         .describe('Content of the post'),
     tags: z
         .array(z.object({id: z.number().int()}))
@@ -22,7 +22,7 @@ export const UpdatePost = z
     .object({
         content: z
             .string()
-            .min(MIN_CONTENT_LENGTH, 'Content has minimum size')
+            .min(MIN_CONTENT_LENGTH, 'Content has minimum size of 10 characters')
             .optional()
             .describe('Content of the post'),
         tags: z.array(z.object({id: z.number().int()})).optional(),

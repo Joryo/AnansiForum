@@ -1,15 +1,19 @@
 {
   "name": "@repo/schemas",
-  "type": "commonjs",
   "exports": {
     ".": {
       "types": "./src/main.ts",
-      "default": "./dist/main.js"
+      "require": "./dist/cjs/main.js",
+      "import": "./dist/esm/main.js"
     }
   },
   "scripts": {
-    "dev": "./node_modules/typescript/bin/tsc --watch",
-    "build": "./node_modules/typescript/bin/tsc"
+    "dev:esm": "./node_modules/typescript/bin/tsc -p tsconfig.esm.json --watch",
+    "dev:cjs": "./node_modules/typescript/bin/tsc -p tsconfig.cjs.json --watch",
+    "dev": "pnpm run dev:esm & pnpm run dev:cjs",
+    "build:esm": "./node_modules/typescript/bin/tsc -p tsconfig.esm.json",
+    "build:cjs": "./node_modules/typescript/bin/tsc -p tsconfig.cjs.json",
+    "build": "pnpm run build:esm && npm run build:cjs"
   },
   "dependencies": {
     "zod": "^3.22.4",
