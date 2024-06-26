@@ -34,16 +34,16 @@ export declare const GetComments: z.ZodObject<{
     limit: z.ZodDefault<z.ZodOptional<z.ZodNumber>>;
     page: z.ZodDefault<z.ZodOptional<z.ZodNumber>>;
 }, "strip", z.ZodTypeAny, {
+    search?: string;
     limit?: number;
     page?: number;
-    search?: string;
     orderBy?: "createdAt";
     order?: "asc" | "desc";
     postId?: number;
 }, {
+    search?: string;
     limit?: number;
     page?: number;
-    search?: string;
     orderBy?: "createdAt";
     order?: "asc" | "desc";
     postId?: number;

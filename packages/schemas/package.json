@@ -2,29 +2,9 @@
   "name": "@repo/schemas",
   "type": "commonjs",
   "exports": {
-    "./post": {
-      "types": "./src/post.ts",
-      "default": "./dist/post.js"
-    },
-    "./comment": {
-      "types": "./src/comment.ts",
-      "default": "./dist/comment.js"
-    },
-    "./member": {
-      "types": "./src/member.ts",
-      "default": "./dist/member.js"
-    },
-    "./tag": {
-      "types": "./src/tag.ts",
-      "default": "./dist/tag.js"
-    },
-    "./memberRoles": {
-      "types": "./src/memberRoles.ts",
-      "default": "./dist/memberRoles.js"
-    },
     ".": {
-      "types": "./src/post.ts",
-      "default": "./dist/post.js"
+      "types": "./src/main.ts",
+      "default": "./dist/main.js"
     }
   },
   "scripts": {
