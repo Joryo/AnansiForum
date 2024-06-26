@@ -14,9 +14,10 @@ import { APP_PIPE } from '@nestjs/core';
 import { PrismaService } from './prisma.service';
 import { AuthModule } from './auth/auth.module';
 import { MemberModule } from './member/member.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [AuthModule, MemberModule],
+  imports: [AuthModule, MemberModule, ConfigModule.forRoot()],
   controllers: [
     AppController,
     PostController,

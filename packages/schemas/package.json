@@ -1,0 +1,22 @@
+{
+  "name": "@repo/schemas",
+  "type": "commonjs",
+  "exports": {
+    ".": {
+      "types": "./src/main.ts",
+      "default": "./dist/main.js"
+    }
+  },
+  "scripts": {
+    "dev": "./node_modules/typescript/bin/tsc --watch",
+    "build": "./node_modules/typescript/bin/tsc"
+  },
+  "dependencies": {
+    "zod": "^3.22.4",
+    "nestjs-zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "tsconfig": "*",
+    "typescript": "latest"
+  }
+}
