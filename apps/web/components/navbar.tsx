@@ -16,7 +16,7 @@ import { Input } from "@nextui-org/input";
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
@@ -26,14 +26,31 @@ import { SearchIcon } from "@/components/icons";
 
 export const Navbar = () => {
   const { user } = useContext(UserContext);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [search, setSearch] = useState("");
   const handleSearch = (query: string) => {
     router.push(`/search?query=${query}`);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const searchInput = (
     <Input
+      ref={searchInputRef}
       aria-label="Search"
       classNames={{
         inputWrapper: "bg-default-100",
