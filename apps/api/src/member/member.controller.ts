@@ -69,7 +69,7 @@ export class MemberController {
   async create(
     @Body() member: CreateMemberDto,
     @Req() { headers: { authorization } },
-    @Res() res,
+    @Res() res: Response,
   ) {
     // Only connected admin can create admins
     if (member.role === MemberRoles.ADMIN) {
@@ -85,7 +85,7 @@ export class MemberController {
     }
 
     const savedMember = await this.memberService.createMember(member);
-    this.authService.loginMember(savedMember, res);
+    await this.authService.loginMember(savedMember, res);
   }
 
   @Put(':id')
