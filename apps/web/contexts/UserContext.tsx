@@ -14,6 +14,8 @@ export const UserContext = createContext<UserContextType>({
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
+}: {
+  children: React.ReactNode;
 }) => {
   const [user, setUser] = useState<User | null>(null);
 

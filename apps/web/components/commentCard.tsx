@@ -3,10 +3,10 @@ import { Image } from "@nextui-org/image";
 import * as dayjs from "dayjs";
 import { Button } from "@nextui-org/button";
 // @ts-ignore
-import * as sanitizeHtml from "sanitize-html";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
-import { highlightWordInText } from "@/services/text";
+import { highlightsSearchesTerms } from "@/services/text";
 import { Comment } from "@/types";
 import { deleteComment } from "@/services/api/Comments";
 import { useRequireUser } from "@/hooks/requireUser";
@@ -24,31 +24,21 @@ export function CommentCard({
 }) {
   const user = useRequireUser();
   const router = useRouter();
-  let content = sanitizeHtml(comment.content);
-
-  highlights.forEach((word) => {
-    const isContentTooLong = content.length > MAX_CONTENT_LENGTH;
-
-    content = highlightWordInText(content, word);
-
-    // If the content is too long, we cut it to the last word that matches the search
-    if (isContentTooLong) {
-      const lastWordIndex =
-        content.lastIndexOf(word) < MAX_CONTENT_LENGTH
-          ? MAX_CONTENT_LENGTH
-          : content.lastIndexOf(word);
-
-      content = content.slice(0, lastWordIndex + word.length) + "...";
-    }
-  });
+  const content = highlightsSearchesTerms(
+    comment.content,
+    highlights,
+    MAX_CONTENT_LENGTH,
+  );
 
   const handleDelete = (commentId: string) => {
     if (!onDelete) return;
     deleteComment(commentId)
-      .then(() => onDelete())
-      .catch((error) => {
-        //TODO: Handle error
-        console.error(error);
+      .then(() => {
+        toast.success("Comment deleted");
+        onDelete();
+      })
+      .catch(() => {
+        toast.error("Failed to delete comment");
       });
   };
 
@@ -87,7 +77,7 @@ export function CommentCard({
           )}
           {!onDelete && (
             <Button
-              color={"success"}
+              color={"secondary"}
               size={"sm"}
               onClick={() => handleGoToPost(comment.post.id)}
             >

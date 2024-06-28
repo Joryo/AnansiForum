@@ -18,7 +18,7 @@ exports.CreateMember = exports.BaseMemberSchema.extend({
         .describe('Role of the member'),
 });
 exports.UpdateMember = z.object({
-    name: z.string().optional().describe('Name of the member'),
+    name: z.string().min(3).optional().describe('Name of the member'),
     email: z.string().email().optional().describe('Email of the member'),
     password: z
         .string()

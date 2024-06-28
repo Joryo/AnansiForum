@@ -18,7 +18,7 @@ export const CreateMember = BaseMemberSchema.extend({
 });
 
 export const UpdateMember = z.object({
-    name: z.string().optional().describe('Name of the member'),
+    name: z.string().min(3).optional().describe('Name of the member'),
     email: z.string().email().optional().describe('Email of the member'),
     password: z
         .string()
