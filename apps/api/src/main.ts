@@ -10,9 +10,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
 
-  //TODO: Push origin to env variable
   app.enableCors({
-    origin: 'http://localhost:3000', //TODO: Use env variable
+    origin: process.env.FRONT_URL,
     exposedHeaders: ['X-Access-Token', 'Set-Cookie', 'X-Total-Count'],
     credentials: true,
   });
@@ -31,8 +30,7 @@ async function bootstrap() {
     },
   });
 
-  //TODO: Use env variable
-  await app.listen(3002);
+  await app.listen(process.env.LISTENING_PORT);
 }
 
 bootstrap();

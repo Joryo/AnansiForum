@@ -2,47 +2,61 @@
 
 import { Input, Textarea } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CreatePost } from "@repo/schemas";
+import { toast } from "react-toastify";
 
 import { useRequireUser } from "@/hooks/requireUser";
-import { createPost } from "@/services/api/Posts";
+import { createPost, CreatePostData } from "@/services/api/Posts";
 
 export default function PostsNewPage() {
   useRequireUser();
   const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
 
-  const handleSubmit = () => {
-    createPost(title, content)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreatePostData>({
+    resolver: zodResolver(CreatePost),
+  });
+
+  const onSubmit = (data: CreatePostData) => {
+    createPost(data)
       .then((post) => {
+        toast.success("Post created");
         router.push(`/posts/${post.data.id}`);
       })
-      .catch((error) => {
-        //TODO: Show alert error
-        console.error(error);
+      .catch(() => {
+        toast.error("Failed to create post");
       });
   };
 
   return (
-    <>
+    <form
+      className="flex flex-col gap-6 px-6"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Input
         label="Title"
         type="text"
-        onChange={(e) => setTitle(e.target.value)}
+        {...register("title")}
+        errorMessage={errors.title && (errors.title.message as string)}
+        isInvalid={!!errors.title}
       />
-      <Textarea label="Body" onChange={(e) => setContent(e.target.value)} />
+      <Textarea
+        label="Body"
+        {...register("content")}
+        errorMessage={errors.content && (errors.content.message as string)}
+        isInvalid={!!errors.content}
+      />
       <div className="flex flex-row-reverse">
-        <Button
-          className="max-w-32"
-          color="primary"
-          size="lg"
-          onClick={() => handleSubmit()}
-        >
+        <Button className="max-w-32" color="primary" size="lg" type={"submit"}>
           Post
         </Button>
       </div>
-    </>
+    </form>
   );
 }

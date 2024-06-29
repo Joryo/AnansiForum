@@ -39,3 +39,4 @@ yarn-error.log*
 apps/api/prisma/database.db
 
 .idea
+.vscode

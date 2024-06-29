@@ -13,27 +13,42 @@ import Image from "next/image";
 import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
 import { Input } from "@nextui-org/input";
-import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
-import clsx from "clsx";
-import { useContext, useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { UserContext } from "@/contexts/UserContext";
 import { SearchIcon } from "@/components/icons";
 
 export const Navbar = () => {
-  const { user } = useContext(UserContext);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
   const [search, setSearch] = useState("");
   const handleSearch = (query: string) => {
     router.push(`/search?query=${query}`);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const searchInput = (
     <Input
+      ref={searchInputRef}
       aria-label="Search"
       classNames={{
         inputWrapper: "bg-default-100",
@@ -62,10 +77,9 @@ export const Navbar = () => {
     />
   );
 
-  //TODO: Fix hydration error here
-  if (!user) {
-    //return null;
-  }
+  const linkClassName = (href: string) => {
+    return pathname === href ? "text-primary font-bold" : "text-foreground";
+  };
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -73,7 +87,7 @@ export const Navbar = () => {
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Image
-              alt="Picture of the author"
+              alt="Anansi forum logo"
               height={40}
               src="/logo-horizontal.png"
               width={40}
@@ -82,15 +96,8 @@ export const Navbar = () => {
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start ml-2">
           {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
-                )}
-                color="foreground"
-                href={item.href}
-              >
+            <NavbarItem key={item.href} className={linkClassName(item.href)}>
+              <NextLink color="foreground" href={item.href}>
                 {item.label}
               </NextLink>
             </NavbarItem>

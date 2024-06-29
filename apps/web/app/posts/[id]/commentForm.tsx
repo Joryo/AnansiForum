@@ -1,8 +1,12 @@
 import { Textarea } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CreateComment } from "@repo/schemas";
+import { toast } from "react-toastify";
 
 import { createComment } from "@/services/api/Comments";
+import { CreateCommentData } from "@/services/api/Comments";
 
 export default function CommentForm({
   postId,
@@ -11,35 +15,46 @@ export default function CommentForm({
   postId: number;
   onCreate: () => void;
 }) {
-  const [content, setContent] = useState("");
+  const {
+    setValue,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateCommentData>({
+    resolver: zodResolver(CreateComment),
+  });
 
-  const handleSubmit = () => {
-    createComment(postId, content)
+  setValue("post.id", postId);
+
+  const onSubmit = (data: CreateCommentData) => {
+    createComment(data)
       .then(() => {
+        toast.success("Comment created");
         onCreate();
       })
-      .catch((error) => {
-        //TODO: Show alert error
-        console.error(error);
+      .catch(() => {
+        toast.error("Failed to create comment");
       });
   };
 
   return (
-    <div className={"m-6"}>
+    <form className={"m-6"} onSubmit={handleSubmit(onSubmit)}>
       <Textarea
         label="Write a comment"
-        onChange={(e) => setContent(e.target.value)}
+        {...register("content")}
+        errorMessage={errors.content && (errors.content.message as string)}
+        isInvalid={!!errors.content}
       />
       <div className="flex flex-row-reverse">
         <Button
           className="max-w-32 mt-2"
           color="primary"
           size="lg"
-          onClick={() => handleSubmit()}
+          type={"submit"}
         >
           Send
         </Button>
       </div>
-    </div>
+    </form>
   );
 }

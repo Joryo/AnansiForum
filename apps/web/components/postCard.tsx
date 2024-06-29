@@ -4,10 +4,9 @@ import { Divider } from "@nextui-org/divider";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
 import * as dayjs from "dayjs";
 // @ts-ignore
-import * as sanitizeHtml from "sanitize-html";
 
 import { Post } from "@/types";
-import { highlightWordInText } from "@/services/text";
+import { highlightsSearchesTerms } from "@/services/text";
 
 dayjs.extend(LocalizedFormat);
 
@@ -21,26 +20,16 @@ export default function PostCard({
   highlights: string[];
 }) {
   // Don't remove sanitizeHtml without removing dangerousSetInnerHTML on jsx render
-  let content = sanitizeHtml(post.content);
-  let title = sanitizeHtml(post.title);
-
-  highlights.forEach((word) => {
-    const isContentTooLong = content.length > MAX_CONTENT_LENGTH;
-
-    content = highlightWordInText(content, word);
-
-    // If the content is too long, we cut it to the last word that matches the search
-    if (isContentTooLong) {
-      const lastWordIndex =
-        content.lastIndexOf(word) < MAX_CONTENT_LENGTH
-          ? MAX_CONTENT_LENGTH
-          : content.lastIndexOf(word);
-
-      content = content.slice(0, lastWordIndex + word.length) + "...";
-    }
-
-    title = highlightWordInText(title, word);
-  });
+  let content = highlightsSearchesTerms(
+    post.content,
+    highlights,
+    MAX_CONTENT_LENGTH,
+  );
+  let title = highlightsSearchesTerms(
+    post.title,
+    highlights,
+    MAX_CONTENT_LENGTH,
+  );
 
   return (
     <Card className="m-6 cursor-pointer">

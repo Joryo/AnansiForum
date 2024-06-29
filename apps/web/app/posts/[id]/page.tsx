@@ -8,6 +8,7 @@ import { Image } from "@nextui-org/image";
 import * as dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
 import { Button } from "@nextui-org/button";
+import { toast } from "react-toastify";
 
 import { Post } from "@/types";
 import { useRequireUser } from "@/hooks/requireUser";
@@ -27,10 +28,13 @@ export default function LastPosts() {
     const { id } = params;
 
     if (id) {
-      getPost(id.toString()).then((response) => {
-        setPost(response.data);
-      });
-      //TODO: Handle error
+      getPost(id.toString())
+        .then((response) => {
+          setPost(response.data);
+        })
+        .catch(() => {
+          toast.error("Failed to load post");
+        });
     }
   }, []);
 
@@ -38,11 +42,11 @@ export default function LastPosts() {
     if (!post) return;
     deletePost(post.id.toString())
       .then(() => {
+        toast.success("Post deleted");
         router.push("/");
       })
-      .catch((error) => {
-        //TODO: Handle error
-        console.error(error);
+      .catch(() => {
+        toast.error("Failed to delete post");
       });
   };
 

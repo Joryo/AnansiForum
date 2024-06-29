@@ -1,27 +1,12 @@
+import { UpdateMember } from "@repo/schemas";
+import { z } from "zod";
+
 import Api from "./Api";
 
 const BASE_PATH = "/members";
 
-interface UpdateBody {
-  name: string;
-  email: string;
-  password?: string;
-}
+export type UpdateMemberData = z.infer<typeof UpdateMember>;
 
-export const updateMember = async (
-  id: string,
-  email: string,
-  name: string,
-  password: string,
-) => {
-  const body: UpdateBody = {
-    name,
-    email,
-  };
-
-  if (password) {
-    body.password = password;
-  }
-
-  return Api.put(`${BASE_PATH}/${id}`, body);
+export const updateMember = async (id: string, data: UpdateMemberData) => {
+  return Api.put(`${BASE_PATH}/${id}`, data);
 };

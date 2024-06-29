@@ -5,7 +5,7 @@ export default function BlogLayout({
 }) {
   return (
     <section>
-      <div className="flex flex-col gap-6 px-6">{children}</div>
+      <div>{children}</div>
     </section>
   );
 }

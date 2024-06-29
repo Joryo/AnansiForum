@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Member = exports.UpdateMember = exports.CreateMember = exports.BaseMemberSchema = void 0;
-const z = require("nestjs-zod/z");
-const memberRoles_1 = require("./memberRoles");
+var z = require("nestjs-zod/z");
+var memberRoles_1 = require("./memberRoles");
 exports.BaseMemberSchema = z.object({
     email: z.string().email().describe('Email of the member'),
     name: z.string().describe('Name of the member'),
     password: z.string().min(8).max(100).describe('Password of the member'),
-    createdAt: z.date().default(() => new Date()),
-    updatedAt: z.date().default(() => new Date()),
+    createdAt: z.date().default(function () { return new Date(); }),
+    updatedAt: z.date().default(function () { return new Date(); }),
 });
 exports.CreateMember = exports.BaseMemberSchema.extend({
     role: z
@@ -31,4 +31,3 @@ exports.UpdateMember = z.object({
 exports.Member = exports.CreateMember.extend({
     id: z.number().int().describe('Id of the member'),
 });
-//# sourceMappingURL=member.js.map

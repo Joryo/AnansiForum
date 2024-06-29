@@ -47,8 +47,7 @@ export class AuthService {
     this.sendLoginResponse(login, res, member);
   }
 
-  async refresh(refreshToken: string, res) {
-    console.log('refreshToken', refreshToken);
+  async refresh(refreshToken: string, res: Response) {
     const payload = this.jwtService.verify(refreshToken);
     const member = await this.memberService.member({
       id: payload.id,
@@ -58,7 +57,7 @@ export class AuthService {
       throw new Error('Member not found');
     }
 
-    const isRefreshTokenValid = await bcrypt.compare(
+    const isRefreshTokenValid = bcrypt.compare(
       refreshToken,
       member.refreshToken,
     );

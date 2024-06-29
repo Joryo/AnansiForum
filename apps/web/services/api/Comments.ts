@@ -1,10 +1,15 @@
 import queryString from "querystring";
 
+import { z } from "zod";
+import { CreateComment } from "@repo/schemas";
+
 import Api from "./Api";
 
 import { ApiResponse } from "@/types";
 
 const BASE_PATH = "/comments";
+
+export type CreateCommentData = z.infer<typeof CreateComment>;
 
 export interface CommentQueryParams extends queryString.ParsedUrlQueryInput {
   page: number;
@@ -20,12 +25,8 @@ export const getComments = async (
   return Api.get(BASE_PATH, searchParams);
 };
 
-export const getComment = async (id: string) => {
-  return Api.get(`${BASE_PATH}/${id}`);
-};
-
-export const createComment = async (postId: number, content: string) => {
-  return Api.post(BASE_PATH, { post: { id: postId }, content });
+export const createComment = async (data: CreateCommentData) => {
+  return Api.post(BASE_PATH, data);
 };
 
 export const deleteComment = async (id: string) => {

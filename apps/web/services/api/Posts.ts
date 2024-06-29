@@ -1,5 +1,8 @@
 import queryString from "querystring";
 
+import { z } from "zod";
+import { CreatePost } from "@repo/schemas";
+
 import Api from "./Api";
 
 import { ApiResponse } from "@/types";
@@ -13,6 +16,8 @@ export interface PostQueryParams extends queryString.ParsedUrlQueryInput {
   search?: string;
 }
 
+export type CreatePostData = z.infer<typeof CreatePost>;
+
 export const getPosts = async (
   queryParams: PostQueryParams,
 ): Promise<ApiResponse> => {
@@ -23,8 +28,8 @@ export const getPost = async (id: string) => {
   return Api.get(`${BASE_PATH}/${id}`);
 };
 
-export const createPost = async (title: string, content: string) => {
-  return Api.post(BASE_PATH, { title, content });
+export const createPost = async (data: CreatePostData) => {
+  return Api.post(BASE_PATH, data);
 };
 
 export const deletePost = async (id: string) => {

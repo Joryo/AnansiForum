@@ -40,15 +40,14 @@ export default function CommentList({ postId }: { postId: number }) {
   };
 
   const handleNewComment = () => {
-    if (
-      page === Math.ceil(count / COMMENT_BY_PAGE) &&
-      count % COMMENT_BY_PAGE === 0
-    ) {
-      handleChangePage(page + 1, true);
+    let newPage = Math.ceil(count / COMMENT_BY_PAGE);
+
+    if (page === newPage && count % COMMENT_BY_PAGE === 0) {
+      newPage = newPage + 1;
 
       return;
     }
-    handleChangePage(Math.ceil(count / COMMENT_BY_PAGE), true);
+    handleChangePage(Math.max(newPage, 1), true);
   };
 
   const pagination = (
