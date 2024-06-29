@@ -9,15 +9,15 @@ export declare const CreateComment: z.ZodObject<{
     }>;
     content: z.ZodString;
 }, "strip", z.ZodTypeAny, {
+    content?: string;
     post?: {
         id?: number;
     };
-    content?: string;
 }, {
+    content?: string;
     post?: {
         id?: number;
     };
-    content?: string;
 }>;
 export declare const UpdateComment: z.ZodObject<{
     content: z.ZodString;
@@ -34,17 +34,17 @@ export declare const GetComments: z.ZodObject<{
     limit: z.ZodDefault<z.ZodOptional<z.ZodNumber>>;
     page: z.ZodDefault<z.ZodOptional<z.ZodNumber>>;
 }, "strip", z.ZodTypeAny, {
+    search?: string;
     limit?: number;
     page?: number;
-    postId?: number;
     orderBy?: "createdAt";
     order?: "asc" | "desc";
-    search?: string;
+    postId?: number;
 }, {
+    search?: string;
     limit?: number;
     page?: number;
-    postId?: number;
     orderBy?: "createdAt";
     order?: "asc" | "desc";
-    search?: string;
+    postId?: number;
 }>;

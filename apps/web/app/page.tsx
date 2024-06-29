@@ -5,6 +5,7 @@ import * as dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 import { Post } from "@/types";
 import { useRequireUser } from "@/hooks/requireUser";
@@ -24,13 +25,15 @@ export default function LastPosts() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    getPosts({ page, limit: POSTS_BY_PAGE, orderBy: "createdAt" }).then(
-      (response) => {
+    getPosts({ page, limit: POSTS_BY_PAGE, orderBy: "createdAt" })
+      .then((response) => {
         setCount(response.totalCount);
         setPosts(response.data);
         setLoading(false);
-      },
-    );
+      })
+      .catch(() => {
+        toast.error("Failed to load posts");
+      });
   }, [page]);
 
   const handleChangePage = (page: number) => {

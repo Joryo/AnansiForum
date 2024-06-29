@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Divider } from "@nextui-org/divider";
+import { toast } from "react-toastify";
 
 import { Post } from "@/types";
 import { Comment } from "@/types";
@@ -29,8 +30,8 @@ export default function Search() {
         setPosts(response.data);
         setLoadingPosts(false);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(() => {
+        toast.error("Failed to load posts");
       });
 
     getComments({ search: query, limit: 10, page: 1 })
@@ -38,8 +39,8 @@ export default function Search() {
         setComments(response.data);
         setLoadingComments(false);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(() => {
+        toast.error("Failed to load comments");
       });
   }, [query]);
 

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Input } from "@nextui-org/input";
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 import { UserContext } from "@/contexts/UserContext";
 import Api from "@/services/api/Api";
@@ -21,8 +22,8 @@ export default function LoginPage() {
       .then((user) => {
         setUser(user);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(() => {
+        toast.error("Failed to login");
       });
   };
 
@@ -66,7 +67,7 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
       <div className="mt-4">
-        <span className="text-sm">Don't have an account? </span>
+        <span className="text-sm">{"Don't have an account?"} </span>
         <Link className="text-sm text-blue-500" href="#" prefetch={false}>
           Sign up
         </Link>

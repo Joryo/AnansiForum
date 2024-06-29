@@ -49,15 +49,15 @@ export declare const GetPosts: z.ZodObject<{
     limit: z.ZodDefault<z.ZodOptional<z.ZodNumber>>;
     page: z.ZodDefault<z.ZodOptional<z.ZodNumber>>;
 }, "strip", z.ZodTypeAny, {
+    search?: string;
     limit?: number;
     page?: number;
     orderBy?: "createdAt";
     order?: "asc" | "desc";
-    search?: string;
 }, {
+    search?: string;
     limit?: number;
     page?: number;
     orderBy?: "createdAt";
     order?: "asc" | "desc";
-    search?: string;
 }>;

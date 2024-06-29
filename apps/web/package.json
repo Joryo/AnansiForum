@@ -28,12 +28,8 @@
     "@nextui-org/theme": "2.2.4",
     "@react-aria/ssr": "^3.9.2",
     "@react-aria/visually-hidden": "^3.8.10",
-    "@types/node": "20.5.7",
-    "@types/react": "18.3.2",
-    "@types/react-dom": "18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.10.0",
     "@typescript-eslint/parser": "^7.10.0",
-    "Skeleton": "link:@mui/joy/Skeleton",
     "autoprefixer": "10.4.19",
     "clsx": "^2.0.0",
     "react-hook-form": "^7.52.0",
@@ -63,7 +59,9 @@
     "sanitize-html": "^2.13.0"
   },
   "devDependencies": {
-    "@types": "link:@types",
+    "@types/node": "20.5.7",
+    "@types/react": "18.0.1",
+    "@types/react-dom": "18.3.0",
     "@hookform/devtools": "^4.3.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.10.0",
