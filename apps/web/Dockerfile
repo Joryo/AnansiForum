@@ -1,32 +1,71 @@
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS base
+
+FROM base AS builder
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk update
+RUN apk add --no-cache libc6-compat
+# Set working directory
 WORKDIR /app
-RUN yarn global add turbo
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Configure pnpm global
+ENV PNPM_HOME=/app/.pnpm
+ENV PATH=$PATH:$PNPM_HOME
+
+RUN pnpm install turbo --global
 COPY . .
-# Only Take packages that are needed to compile this app
-RUN turbo prune --scope=web --docker
+RUN turbo prune web --docker
 
 # Add lockfile and package.json's of isolated subworkspace
-FROM node:20-alpine AS installer
+FROM base AS installer
 RUN apk update
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/yarn.lock ./yarn.lock
-COPY --from=builder /app/turbo.json ./turbo.json
-RUN yarn install --frozen-lockfile
 
+# Install pnpm
+RUN npm install -g pnpm
 
-FROM node:20-alpine AS sourcer
-RUN apk update
-WORKDIR /app
-COPY --from=installer /app/ .
-COPY --from=builder /app/out/full/ .
+# Configure pnpm global
+ENV PNPM_HOME=/app/.pnpm
+ENV PATH=$PATH:$PNPM_HOME
+
+# First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
-RUN yarn turbo run build --scope=web --include-dependencies --no-deps
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN pnpm install
 
-FROM node:20-alpine as runner
+# Build the project
+COPY --from=builder /app/out/full/ .
+COPY turbo.json turbo.json
+
+# Uncomment and use build args to enable remote caching
+# ARG TURBO_TEAM
+# ENV TURBO_TEAM=$TURBO_TEAM
+
+# ARG TURBO_TOKEN
+# ENV TURBO_TOKEN=$TURBO_TOKEN
+
+# Remove all .env* files
+RUN pnpm turbo build --filter=web...
+
+FROM base AS runner
 WORKDIR /app
-COPY --from=sourcer /app/ .
-WORKDIR /app/apps/web/
-CMD [ "npm", "start" ]
+
+# Don't run production as root
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+USER nextjs
+
+COPY --from=installer /app/apps/web/next.config.js .
+COPY --from=installer /app/apps/web/package.json .
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+
+CMD node apps/web/server.js
