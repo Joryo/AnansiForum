@@ -50,14 +50,18 @@ COPY turbo.json turbo.json
 # ENV TURBO_TOKEN=$TURBO_TOKEN
 
 RUN pnpm turbo build --filter=api...
-
 FROM base AS runner
 WORKDIR /app
 
 # Don't run production as root
-RUN addgroup --system --gid 1001 expressjs
-RUN adduser --system --uid 1001 expressjs
+RUN addgroup --system --gid 1001 expressjs && \
+    adduser --system --uid 1001 expressjs && \
+    mkdir -p /data && chown -R expressjs:expressjs /data && \
+    touch /data/database.db \
+
 USER expressjs
 COPY --from=installer /app .
 
-CMD node apps/api/dist/main
+WORKDIR /app/apps/api
+
+CMD npx prisma migrate deploy && node dist/main.js
