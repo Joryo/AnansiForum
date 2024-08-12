@@ -26,13 +26,10 @@ services:
     ports:
       - 3001:3001
     volumes:
-      - database_data:/data
+      - .:/data
     networks:
       - app_network
 
 networks:
   app_network:
     external: true
-
-volumes:
-  database_data:
