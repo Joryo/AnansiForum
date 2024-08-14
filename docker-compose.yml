@@ -22,7 +22,7 @@ services:
     environment:
       - DATABASE_URL=file:/data/database.db
       - JWT_SECRET=zgbYGVmU4obRjwbPNdaweacTjZVMZn8Nux3Q4esSF8pdwo7PEWjjYvWjdvXswCyh
-      - FRONT_URL=http://0.0.0.0:3000
+      - FRONT_URL=http://localhost:3000
     ports:
       - 3001:3001
     volumes:

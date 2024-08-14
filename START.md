@@ -6,3 +6,8 @@ ENV="local"
 in apps/api: npx prisma generate
 
 pnpm dev
+
+
+Docker:
+docker-compose build
+docker-compose up -d
